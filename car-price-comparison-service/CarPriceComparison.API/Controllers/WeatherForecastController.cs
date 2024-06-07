@@ -1,7 +1,9 @@
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarPriceComparison.API.Controllers;
 
+[EnableCors("any")]
 [ApiController]
 [Route("[controller]")]
 public class WeatherForecastController : ControllerBase
