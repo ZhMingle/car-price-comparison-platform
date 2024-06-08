@@ -25,10 +25,10 @@ public class UserController : ControllerBase
         return Ok(_userService.GetAll(pageIndex,pageNum));
     }
     
-    [HttpGet("{id:int}")]
-    public ActionResult<User> GetById(int id)
+    [HttpGet("{userId:int}")]
+    public ActionResult<User> GetById(int userId)
     {
-        return Ok(_userService.GetById(id));
+        return Ok(_userService.GetById(userId));
     }
     
     [HttpPost]
@@ -37,18 +37,18 @@ public class UserController : ControllerBase
         return Ok(_userService.Add(user));
     }
     
-    [HttpPut("{id:int}")]
-    public IActionResult Update(int id, User user)
+    [HttpPut("{userId:int}")]
+    public IActionResult Update(int userId, User user)
     {
         _userService.Update(user);
         
         return NoContent();
     }
     
-    [HttpDelete("{id:int}")]
-    public IActionResult Delete(int id)
+    [HttpDelete("{userId:int}")]
+    public IActionResult Delete(int userId)
     {
-        _userService.Delete(id);
+        _userService.Delete(userId);
         
         return NoContent();
     }

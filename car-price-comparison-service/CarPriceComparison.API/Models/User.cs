@@ -1,15 +1,19 @@
-﻿namespace CarPriceComparison.API.Models;
+﻿using System.ComponentModel.DataAnnotations.Schema;
+
+namespace CarPriceComparison.API.Models;
 
 public class User
 {
-    public User(int age, string name)
+    public User(int userId, string username)
     {
-        Age = age;
-        Name = name;
+        UserId = userId;
+        Username = username;
     }
+    
+    [Column("user_id")]
+    public int UserId { get; set; }
 
-    public int Age { get; set; }
-
-    public string? Name { get; set; }
+    [Column("username")]
+    public string? Username { get; set; }
 
 }

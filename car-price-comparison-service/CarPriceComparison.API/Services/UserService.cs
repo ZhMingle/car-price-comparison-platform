@@ -1,10 +1,19 @@
-﻿using CarPriceComparison.API.Models;
+﻿using CarPriceComparison.API.Data;
+using CarPriceComparison.API.Models;
 using CarPriceComparison.API.UserServices.Interface;
 
 namespace CarPriceComparison.API.UserServices;
 
 public class UserService : IUserService
 {
+    
+    private readonly ApplicationDbContext _context;
+
+    public UserService(ApplicationDbContext context)
+    {
+        _context = context;
+    }
+    
     private List<User> _users = new List<User>
     {
         new User(1,"kris"),
@@ -16,9 +25,9 @@ public class UserService : IUserService
         return _users;
     }
 
-    public User GetById(int id)
+    public User GetById(int userId)
     {
-        return new User(111, "11223344");
+        return _context.Users.Find(userId);
     }
 
     public bool Add(User user)
@@ -31,7 +40,7 @@ public class UserService : IUserService
         return true;
     }
 
-    public bool Delete(int id)
+    public bool Delete(int userId)
     {
         return true;
     }
