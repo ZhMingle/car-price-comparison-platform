@@ -1,4 +1,5 @@
 ﻿using CarPriceComparison.API.Models;
+using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,34 +10,47 @@ namespace CarPriceComparison.API.Controllers;
 [Route("user")]
 public class UserController : ControllerBase
 { 
-    [HttpGet("{id:int}")]
-    public ActionResult<User> GetById(int id)
+    
+    private readonly UserService _userService;
+
+    // IOC UserService
+    public UserController(UserService userService)
     {
-        return Ok(new User(1, "11"));
+        _userService = userService;
     }
     
     [HttpGet("")]
     public ActionResult<IEnumerable<User>> GetList(int pageIndex, int pageNum)
     {
-        return Ok(new User(1, "11"));
+        return Ok(_userService.GetAll(pageIndex,pageNum));
+    }
+    
+    [HttpGet("{id:int}")]
+    public ActionResult<User> GetById(int id)
+    {
+        return Ok(_userService.GetById(id));
     }
     
     [HttpPost]
     public ActionResult<User> Add(User user)
     {
-        return Ok(user);
+        return Ok(_userService.Add(user));
     }
     
     [HttpPut("{id:int}")]
-    public IActionResult Update(int id, User student)
+    public IActionResult Update(int id, User user)
     {
-        return Ok(true);
+        _userService.Update(user);
+        
+        return NoContent();
     }
     
     [HttpDelete("{id:int}")]
     public IActionResult Delete(int id)
     {
-        return Ok(true);
+        _userService.Delete(id);
+        
+        return NoContent();
     }
     
 }
