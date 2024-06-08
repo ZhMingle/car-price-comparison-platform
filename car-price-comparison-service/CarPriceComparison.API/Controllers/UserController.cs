@@ -10,19 +10,19 @@ namespace CarPriceComparison.API.Controllers;
 public class UserController : ControllerBase
 { 
     [HttpGet("{id:int}")]
-    public IActionResult GetById(int id)
+    public ActionResult<User> GetById(int id)
     {
         return Ok(new User(1, "11"));
     }
     
     [HttpGet("")]
-    public IActionResult GetList(int pageIndex, int pageNum)
+    public ActionResult<IEnumerable<User>> GetList(int pageIndex, int pageNum)
     {
         return Ok(new User(1, "11"));
     }
     
     [HttpPost]
-    public IActionResult Add(User user)
+    public ActionResult<User> Add(User user)
     {
         return Ok(user);
     }
