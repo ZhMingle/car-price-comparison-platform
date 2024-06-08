@@ -1,4 +1,5 @@
 ﻿using CarPriceComparison.API.Models;
+using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -10,7 +11,7 @@ namespace CarPriceComparison.API.Controllers;
 /// </summary>
 [EnableCors("any")]
 [ApiController]
-[Route("user123")]
+[Route("user")]
 public class UserController : ControllerBase
 { 
     
@@ -23,13 +24,15 @@ public class UserController : ControllerBase
     }
     
     /// <summary>
-    /// Get page users. For example: pageIndex = 0, pageNum = 10. It means that we can get 10 items from first page.
+    /// Gets paginated users.
     /// </summary>
+    /// <param name="pageNumber">The page number. From 0 to more</param>
+    /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A list of users.</returns>
     [HttpGet("")]
-    public ActionResult<IEnumerable<User>> GetList(int pageIndex, int pageNum)
+    public ActionResult<UserList> GetList(int pageNumber = 1, int pageSize = 10)
     {
-        return Ok(_userService.GetAll(pageIndex,pageNum));
+        return Ok(_userService.GetAll(pageNumber, pageSize));
     }
     
     /// <summary>
@@ -40,7 +43,13 @@ public class UserController : ControllerBase
     [HttpGet("{userId:int}")]
     public ActionResult<User> GetById(int userId)
     {
-        return Ok(_userService.GetById(userId));
+        var user = _userService.GetById(userId);
+        if (null == user)
+        {
+            return NotFound();
+        }
+        
+        return Ok(user);
     }
     
     /// <summary>
@@ -49,9 +58,10 @@ public class UserController : ControllerBase
     /// <param name="user">The user to create.</param>
     /// <returns>The created user.</returns>
     [HttpPost]
-    public ActionResult<User> Add(User user)
+    public IActionResult Add(User user)
     {
-        return Ok(_userService.Add(user));
+        _userService.Add(user);
+        return NoContent();
     }
     
     /// <summary>
@@ -61,10 +71,35 @@ public class UserController : ControllerBase
     /// <param name="user">The updated user data.</param>
     /// <returns>No content if successful.</returns>
     [HttpPut("{userId:int}")]
-    public IActionResult Update(int userId, User user)
+    public IActionResult Update(int userId, [FromBody] User user)
     {
-        _userService.Update(user);
-        
+        if (userId != user.UserId)
+        {
+            return BadRequest();
+        }
+
+        var result = _userService.Update(user);
+        if (!result)
+        {
+            return NotFound();
+        }
+        return NoContent();
+    }
+    
+    /// <summary>
+    /// Partially updates an existing user.
+    /// </summary>
+    /// <param name="userId">The ID of the user to update.</param>
+    /// <param name="userDto">The user data with fields to update.</param>
+    /// <returns>No content if successful.</returns>
+    [HttpPatch("{userId:int}")]
+    public IActionResult UpdateUserPartial(int userId, [FromBody] UpdateUserDto userDto)
+    {
+        var result = _userService.UpdatePartial(userId, userDto);
+        if (!result)
+        {
+            return NotFound();
+        }
         return NoContent();
     }
     
@@ -76,8 +111,11 @@ public class UserController : ControllerBase
     [HttpDelete("{userId:int}")]
     public IActionResult Delete(int userId)
     {
-        _userService.Delete(userId);
-        
+        var result = _userService.Delete(userId);
+        if (!result)
+        {
+            return NotFound();
+        }
         return NoContent();
     }
     
