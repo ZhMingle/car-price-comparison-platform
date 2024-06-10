@@ -1,11 +1,16 @@
 ﻿using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarPriceComparison.API.Controllers;
 
+/// <summary>
+/// Controller for handling authentication.
+/// </summary>
+[EnableCors("any")]
 [ApiController]
-[Route("[controller]")]
+[Route("auth")]
 public class AuthController : ControllerBase
 {
     private readonly TokenService _tokenService;
@@ -15,11 +20,18 @@ public class AuthController : ControllerBase
         _tokenService = tokenService;
     }
 
+    /// <summary>
+    /// Authenticates a user and returns a JWT token.
+    /// </summary>
+    /// <param name="model">The login model containing username and password.</param>
+    /// <returns>A JWT token if authentication is successful.</returns>
+    /// <response code="200">Returns the JWT token</response>
+    /// <response code="401">If the credentials are invalid</response>
     [AllowAnonymous]
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel model)
     {
-        // 验证用户（这里需要替换成实际的用户验证逻辑）
+        // auth user
         if (model.Username == "test" && model.Password == "password")
         {
             var token = _tokenService.GenerateToken(model.Username);
