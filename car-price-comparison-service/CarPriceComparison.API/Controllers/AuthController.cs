@@ -1,4 +1,5 @@
 ﻿using CarPriceComparison.API.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace CarPriceComparison.API.Controllers;
@@ -14,6 +15,7 @@ public class AuthController : ControllerBase
         _tokenService = tokenService;
     }
 
+    [AllowAnonymous]
     [HttpPost("login")]
     public IActionResult Login([FromBody] LoginModel model)
     {

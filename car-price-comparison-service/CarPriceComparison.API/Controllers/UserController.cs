@@ -31,6 +31,7 @@ public class UserController : ControllerBase
     /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A list of users.</returns>
     [HttpGet("")]
+    [AllowAnonymous]
     public ActionResult<UserList> GetList(int pageNumber = 1, int pageSize = 10)
     {
         return Ok(_userService.GetAll(pageNumber, pageSize));
@@ -42,7 +43,6 @@ public class UserController : ControllerBase
     /// <param name="userId">The ID of the user.</param>
     /// <returns>The user with the specified userId.</returns>
     [HttpGet("{userId:int}")]
-    [Authorize]
     public ActionResult<User> GetById(int userId)
     {
         var user = _userService.GetById(userId);
