@@ -1,6 +1,7 @@
 ﻿using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.UserServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 
@@ -41,6 +42,7 @@ public class UserController : ControllerBase
     /// <param name="userId">The ID of the user.</param>
     /// <returns>The user with the specified userId.</returns>
     [HttpGet("{userId:int}")]
+    [Authorize]
     public ActionResult<User> GetById(int userId)
     {
         var user = _userService.GetById(userId);

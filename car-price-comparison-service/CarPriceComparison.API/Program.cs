@@ -1,9 +1,32 @@
+using System.Text;
 using CarPriceComparison.API.Data;
 using CarPriceComparison.API.UserServices;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// JWT Auth
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuer = true,
+            ValidateAudience = true,
+            ValidateLifetime = true,
+            ValidateIssuerSigningKey = true,
+            ValidIssuer = builder.Configuration["Jwt:Issuer"],
+            ValidAudience = builder.Configuration["Jwt:Audience"],
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        };
+    });
 
 // Allow cors
 builder.Services.AddCors(c => c.AddPolicy("any", p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
@@ -15,6 +38,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add services to the container.
 builder.Services.AddTransient<UserService>();
+builder.Services.AddTransient<TokenService>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -43,11 +67,15 @@ if (app.Environment.IsDevelopment())
     });
 }
 
+app.UseRouting();
+
 app.UseCors();
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseAuthentication();
 
 app.MapControllers();
 
