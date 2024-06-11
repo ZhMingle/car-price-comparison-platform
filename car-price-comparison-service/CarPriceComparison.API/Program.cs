@@ -33,7 +33,7 @@ builder.Services.AddAuthentication(options =>
         };
     });
 
-// 添加授权服务
+// Add auth
 builder.Services.AddAuthorization();
 
 // Allow cors
@@ -48,7 +48,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<TokenService>();
 
-// 配置全局授权过滤器
+// Auth filter config
 builder.Services.AddControllers(config =>
 {
     var policy = new AuthorizationPolicyBuilder()
