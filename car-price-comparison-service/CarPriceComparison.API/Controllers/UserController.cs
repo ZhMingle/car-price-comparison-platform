@@ -30,8 +30,8 @@ public class UserController : ControllerBase
     /// <param name="pageNumber">The page number. From 0 to more</param>
     /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A list of users.</returns>
+    /// <response code="200">successfully return</response>
     [HttpGet("")]
-    [AllowAnonymous]
     public ActionResult<UserList> GetList(int pageNumber = 1, int pageSize = 10)
     {
         return Ok(_userService.GetAll(pageNumber, pageSize));
@@ -42,8 +42,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userId">The ID of the user.</param>
     /// <returns>The user with the specified userId.</returns>
-    [HttpGet("{userId:int}")]
-    public ActionResult<User> GetById(int userId)
+    /// <response code="200">successfully return</response>
+    [HttpGet("{userId:long}")]
+    public ActionResult<User> GetById(long userId)
     {
         var user = _userService.GetById(userId);
         if (null == user)
@@ -59,6 +60,7 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="user">The user to create.</param>
     /// <returns>The created user.</returns>
+    /// <response code="200">successfully return</response>
     [HttpPost]
     public IActionResult Add(User user)
     {
@@ -72,8 +74,9 @@ public class UserController : ControllerBase
     /// <param name="userId">The ID of the user to update.</param>
     /// <param name="user">The updated user data.</param>
     /// <returns>No content if successful.</returns>
-    [HttpPut("{userId:int}")]
-    public IActionResult Update(int userId, [FromBody] User user)
+    /// <response code="200">successfully return</response>
+    [HttpPut("{userId:long}")]
+    public IActionResult Update(long userId, [FromBody] User user)
     {
         if (userId != user.UserId)
         {
@@ -94,8 +97,9 @@ public class UserController : ControllerBase
     /// <param name="userId">The ID of the user to update.</param>
     /// <param name="userDto">The user data with fields to update.</param>
     /// <returns>No content if successful.</returns>
-    [HttpPatch("{userId:int}")]
-    public IActionResult UpdateUserPartial(int userId, [FromBody] UpdateUserDto userDto)
+    /// <response code="200">successfully return</response>
+    [HttpPatch("{userId:long}")]
+    public IActionResult UpdateUserPartial(long userId, [FromBody] UpdateUserDto userDto)
     {
         var result = _userService.UpdatePartial(userId, userDto);
         if (!result)
@@ -110,8 +114,9 @@ public class UserController : ControllerBase
     /// </summary>
     /// <param name="userId">The ID of the user to delete.</param>
     /// <returns>No content if successful.</returns>
-    [HttpDelete("{userId:int}")]
-    public IActionResult Delete(int userId)
+    /// <response code="200">successfully return</response>
+    [HttpDelete("{userId:long}")]
+    public IActionResult Delete(long userId)
     {
         var result = _userService.Delete(userId);
         if (!result)

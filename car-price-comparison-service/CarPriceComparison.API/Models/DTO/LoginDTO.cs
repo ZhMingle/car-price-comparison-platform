@@ -1,6 +1,6 @@
-﻿namespace CarPriceComparison.API.Models;
+﻿namespace CarPriceComparison.API.Models.DTO;
 
-public class LoginModel
+public class LoginDTO
 {
     public string Username { get; set; }
     public string Password { get; set; }

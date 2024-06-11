@@ -1,9 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-using System.Reflection;
-using CarPriceComparison.API.Data;
+﻿using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.UserServices.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarPriceComparison.API.UserServices;
 
@@ -27,16 +26,15 @@ public class UserService : IUserService
         return new UserList(totalRecords, users);
     }
 
-    public User GetById(int userId)
+    public User GetById(long userId)
     {
         return _context.Users.Find(userId);
     }
 
-    public bool Add(User user)
+    public async Task Add(User user)
     {
         _context.Users.Add(user);
-        _context.SaveChanges();
-        return true;
+        await _context.SaveChangesAsync();
     }
 
     public bool Update(User user)
@@ -54,7 +52,7 @@ public class UserService : IUserService
         return true;
     }
 
-    public bool UpdatePartial(int userId, UpdateUserDto userDto)
+    public bool UpdatePartial(long userId, UpdateUserDto userDto)
     {
         var existingUser = _context.Users.Find(userId);
         if (existingUser == null)
@@ -87,7 +85,7 @@ public class UserService : IUserService
         return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
     
-    public bool Delete(int userId)
+    public bool Delete(long userId)
     {
         var user = _context.Users.Find(userId);
         if (null == user)
@@ -99,4 +97,37 @@ public class UserService : IUserService
         _context.SaveChanges();
         return true;
     }
+
+    public async Task<User> ValidateUser(string username, string password)
+    {
+        if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
+        {
+            return null;
+        }
+
+        var user = await _context.Users.SingleOrDefaultAsync(u => u.Username == username);
+        if (null == user || !BCrypt.Net.BCrypt.Verify(password, user.Password))
+        {
+            return null;
+        }
+
+        return user;
+    }
+    
+    public bool CheckUsernameExist(string username)
+    {
+        if (string.IsNullOrEmpty(username))
+        {
+            return false;
+        }
+
+        var user = _context.Users.SingleOrDefault(u => u.Username == username);
+        if (null == user)
+        {
+            return true;
+        }
+
+        return false;
+    }
+    
 }
