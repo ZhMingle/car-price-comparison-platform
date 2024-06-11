@@ -1,4 +1,5 @@
 ﻿using CarPriceComparison.API.Models;
+using CarPriceComparison.API.Models.Base;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authorization;
@@ -68,10 +69,10 @@ public class AuthController : ControllerBase
         user.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
         user.Email = model.Email;
         user.Mobile = model.Mobile;
-        user.Status = 1;
-        user.CreateUserId = 1;
-        user.CreateTime = new DateTime();
-        user.UpdateTime = new DateTime();
+        user.Status = Constants.UserStatus.Normal;
+        user.CreateUserId = Constants.AdminUser.CreateUserId;
+        user.CreateTime = DateTime.Now;
+        user.UpdateTime = DateTime.Now;
 
         await _userService.Add(user);
         
