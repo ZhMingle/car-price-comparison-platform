@@ -14,7 +14,7 @@ public class ApplicationDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
-        // 可以在这里配置更多的表和列映射
-        modelBuilder.Entity<User>().ToTable("sys_user");
+        // Mapping between tables and objects
+        modelBuilder.Entity<User>().ToTable("auto_user");
     }
 }

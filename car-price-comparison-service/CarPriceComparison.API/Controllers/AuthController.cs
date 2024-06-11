@@ -1,4 +1,5 @@
-﻿using CarPriceComparison.API.UserServices;
+﻿using CarPriceComparison.API.Models;
+using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
@@ -40,10 +41,4 @@ public class AuthController : ControllerBase
 
         return Unauthorized();
     }
-}
-
-public class LoginModel
-{
-    public string Username { get; set; }
-    public string Password { get; set; }
 }
