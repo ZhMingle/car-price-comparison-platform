@@ -99,9 +99,9 @@ public class VehicleController : ControllerBase
     /// <returns>No content if successful.</returns>
     /// <response code="200">successfully return</response>
     [HttpPatch("{vehicleId:long}")]
-    public IActionResult UpdatePartial(long vehicleId, [FromBody] UpdateVehicleDto updateVehicleDto)
+    public IActionResult UpdatePartial(long vehicleId, [FromBody] VehicleUpdateDto vehicleUpdateDto)
     {
-        var result = _vehicleService.UpdatePartial(vehicleId, updateVehicleDto);
+        var result = _vehicleService.UpdatePartial(vehicleId, vehicleUpdateDto);
         if (!result)
         {
             return NotFound();

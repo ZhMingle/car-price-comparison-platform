@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace CarPriceComparison.API.Models.DTO;
 
-public class UpdateVehicleDto
+public class VehicleUpdateDto
 {
 
     [Column("brand")]

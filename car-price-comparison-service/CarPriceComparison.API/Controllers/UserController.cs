@@ -63,28 +63,22 @@ public class UserController : ControllerBase
     /// <returns>The created user.</returns>
     /// <response code="200">successfully return</response>
     [HttpPost]
-    public IActionResult Add(User user)
+    public IActionResult Add(UserCreateDto createDto)
     {
-        _userService.Add(user);
+        _userService.Add(createDto);
         return Ok();
     }
     
     /// <summary>
     /// Updates an existing user.
     /// </summary>
-    /// <param name="userId">The ID of the user to update.</param>
     /// <param name="user">The updated user data.</param>
     /// <returns>No content if successful.</returns>
     /// <response code="200">successfully return</response>
-    [HttpPut("{userId:long}")]
-    public IActionResult Update(long userId, [FromBody] User user)
+    [HttpPut("")]
+    public IActionResult Update([FromBody] UserUpdateDto userUpdateDto)
     {
-        if (userId != user.UserId)
-        {
-            return BadRequest();
-        }
-
-        var result = _userService.Update(user);
+        var result = _userService.Update(userUpdateDto);
         if (!result)
         {
             return NotFound();
@@ -95,14 +89,13 @@ public class UserController : ControllerBase
     /// <summary>
     /// Partially updates an existing user.
     /// </summary>
-    /// <param name="userId">The ID of the user to update.</param>
-    /// <param name="userDto">The user data with fields to update.</param>
+    /// <param name="dto">The user data with fields to update.</param>
     /// <returns>No content if successful.</returns>
     /// <response code="200">successfully return</response>
-    [HttpPatch("{userId:long}")]
-    public IActionResult UpdateUserPartial(long userId, [FromBody] UpdateUserDto userDto)
+    [HttpPatch("")]
+    public IActionResult UpdateUserPartial([FromBody] UserUpdateDto dto)
     {
-        var result = _userService.UpdatePartial(userId, userDto);
+        var result = _userService.UpdatePartial(dto);
         if (!result)
         {
             return NotFound();

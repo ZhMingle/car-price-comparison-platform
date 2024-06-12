@@ -1,5 +1,7 @@
-﻿using CarPriceComparison.API.Data;
+﻿using AutoMapper;
+using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Models;
+using CarPriceComparison.API.Models.Base;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.Services.Interface;
 using Microsoft.EntityFrameworkCore;
@@ -10,10 +12,12 @@ public class UserService : IUserService
 {
     
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public UserService(ApplicationDbContext context)
+    public UserService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
     
     public UserList GetAll(int pageNumber, int pageSize)
@@ -31,41 +35,48 @@ public class UserService : IUserService
         return _context.Users.Find(userId);
     }
 
-    public bool Add(User user)
+    public bool Add(UserCreateDto userCreateDto)
     {
+        // UserDTO mapper to User
+        userCreateDto.Password = BCrypt.Net.BCrypt.HashPassword(userCreateDto.Password);
+        var user = _mapper.Map<User>(userCreateDto);
+        user.CreateUserId = Constants.AdminUser.CreateUserId;
+        user.CreateTime = DateTime.Now;
+        user.UpdateTime = DateTime.Now;
+        
         _context.Users.Add(user);
         _context.SaveChanges();
         return true;
     }
 
-    public bool Update(User user)
+    public bool Update(UserUpdateDto userUpdateDto)
     {
-        var existUser = _context.Users.Find(user.UserId);
+        var existUser = _context.Users.Find(userUpdateDto.UserId);
         if (null == existUser)
         {
             return false;
         }
         
-        existUser.Username = user.Username;
-        // we can add more fields here
-
+        _mapper.Map(userUpdateDto, existUser);
+        existUser.UpdateTime = DateTime.Now;
+        _context.Users.Update(existUser);
         _context.SaveChanges();
         return true;
     }
 
-    public bool UpdatePartial(long userId, UpdateUserDto userDto)
+    public bool UpdatePartial(UserUpdateDto dto)
     {
-        var existingUser = _context.Users.Find(userId);
+        var existingUser = _context.Users.Find(dto.UserId);
         if (existingUser == null)
         {
             return false;
         }
 
         // 动态更新字段
-        var properties = typeof(UpdateUserDto).GetProperties();
+        var properties = typeof(UserUpdateDto).GetProperties();
         foreach (var property in properties)
         {
-            var newValue = property.GetValue(userDto);
+            var newValue = property.GetValue(dto);
             if (newValue != null && !newValue.Equals(GetDefault(property.PropertyType)))
             {
                 var propertyInfo = existingUser.GetType().GetProperty(property.Name);

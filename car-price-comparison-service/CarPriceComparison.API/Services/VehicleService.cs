@@ -53,7 +53,7 @@ public class VehicleService : IVehicleService
         return true;
     }
 
-    public bool UpdatePartial(long vehicleId, UpdateVehicleDto vehicleDto)
+    public bool UpdatePartial(long vehicleId, VehicleUpdateDto dto)
     {
         var existingVehicle = _context.Vehicles.Find(vehicleId);
         if (existingVehicle == null)
@@ -62,10 +62,10 @@ public class VehicleService : IVehicleService
         }
 
         // 动态更新字段
-        var properties = typeof(UpdateVehicleDto).GetProperties();
+        var properties = typeof(VehicleUpdateDto).GetProperties();
         foreach (var property in properties)
         {
-            var newValue = property.GetValue(vehicleDto);
+            var newValue = property.GetValue(dto);
             if (newValue != null && !newValue.Equals(GetDefault(property.PropertyType)))
             {
                 var propertyInfo = existingVehicle.GetType().GetProperty(property.Name);

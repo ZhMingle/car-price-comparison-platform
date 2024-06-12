@@ -57,25 +57,15 @@ public class AuthController : ControllerBase
     /// <response code="400">If the username already exists or validation fails</response>
     [AllowAnonymous]
     [HttpPost("register")]
-    public IActionResult Register([FromBody] RegisterDto model)
+    public IActionResult Register([FromBody] UserCreateDto userDto)
     {
-        var result = _userService.CheckUsernameExist(model.Username);
+        var result = _userService.CheckUsernameExist(userDto.Username);
         if (!result)
         {
             return BadRequest("username has been existed");
         }
 
-        var user = new User();
-        user.Username = model.Username;
-        user.Password = BCrypt.Net.BCrypt.HashPassword(model.Password);
-        user.Email = model.Email;
-        user.Mobile = model.Mobile;
-        user.Status = Constants.UserStatus.Normal;
-        user.CreateUserId = Constants.AdminUser.CreateUserId;
-        user.CreateTime = DateTime.Now;
-        user.UpdateTime = DateTime.Now;
-
-        _userService.Add(user);
+        _userService.Add(userDto);
         
         return Ok();
     }

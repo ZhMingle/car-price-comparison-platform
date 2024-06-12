@@ -2,14 +2,16 @@ using System.Text;
 using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
+using CarPriceComparison.API.Utils;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
+
+// Register AutoMapper with a specific profile
+builder.Services.AddAutoMapper(typeof(MappingProfile));
 
 // Loading JWT key
 var jwtKey = builder.Configuration["Jwt:Key"];
