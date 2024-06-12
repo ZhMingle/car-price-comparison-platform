@@ -2,7 +2,6 @@
 using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.Services.Interface;
-using Microsoft.EntityFrameworkCore;
 
 namespace CarPriceComparison.API.Services;
 

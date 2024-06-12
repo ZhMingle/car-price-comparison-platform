@@ -28,7 +28,7 @@ public class UserController : ControllerBase
     /// <summary>
     /// Gets paginated users.
     /// </summary>
-    /// <param name="pageNumber">The page number. From 0 to more</param>
+    /// <param name="pageNumber">The page number. From 1 to more</param>
     /// <param name="pageSize">The number of items per page.</param>
     /// <returns>A list of users.</returns>
     /// <response code="200">successfully return</response>
@@ -66,7 +66,7 @@ public class UserController : ControllerBase
     public IActionResult Add(User user)
     {
         _userService.Add(user);
-        return NoContent();
+        return Ok();
     }
     
     /// <summary>
@@ -89,7 +89,7 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        return NoContent();
+        return Ok();
     }
     
     /// <summary>
@@ -107,7 +107,7 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        return NoContent();
+        return Ok();
     }
     
     /// <summary>
@@ -124,7 +124,7 @@ public class UserController : ControllerBase
         {
             return NotFound();
         }
-        return NoContent();
+        return Ok();
     }
     
 }

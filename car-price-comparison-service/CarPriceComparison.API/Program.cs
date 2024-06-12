@@ -48,6 +48,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 // Add services to the container.
 builder.Services.AddTransient<UserService>();
 builder.Services.AddTransient<TokenService>();
+builder.Services.AddTransient<VehicleService>();
 
 // Auth filter config
 builder.Services.AddControllers(config =>
