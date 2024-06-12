@@ -64,39 +64,6 @@ public class UserService : IUserService
         return true;
     }
 
-    public bool UpdatePartial(UserUpdateDto dto)
-    {
-        var existingUser = _context.Users.Find(dto.UserId);
-        if (existingUser == null)
-        {
-            return false;
-        }
-
-        // 动态更新字段
-        var properties = typeof(UserUpdateDto).GetProperties();
-        foreach (var property in properties)
-        {
-            var newValue = property.GetValue(dto);
-            if (newValue != null && !newValue.Equals(GetDefault(property.PropertyType)))
-            {
-                var propertyInfo = existingUser.GetType().GetProperty(property.Name);
-                if (propertyInfo != null && propertyInfo.CanWrite)
-                {
-                    propertyInfo.SetValue(existingUser, newValue);
-                    _context.Entry(existingUser).Property(propertyInfo.Name).IsModified = true;
-                }
-            }
-        }
-
-        _context.SaveChanges();
-        return true;
-    }
-
-    private static object GetDefault(Type type)
-    {
-        return type.IsValueType ? Activator.CreateInstance(type) : null;
-    }
-    
     public bool Delete(long userId)
     {
         var user = _context.Users.Find(userId);

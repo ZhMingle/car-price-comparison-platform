@@ -12,5 +12,10 @@ public class MappingProfile : Profile
         CreateMap<UserCreateDto, User>();
         CreateMap<UserUpdateDto, User>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+        
+        CreateMap<VehicleCreateDto, Vehicle>();
+        CreateMap<VehicleUpdateDto, Vehicle>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
     }
 }

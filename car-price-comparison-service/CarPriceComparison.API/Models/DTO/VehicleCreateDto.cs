@@ -1,9 +1,8 @@
 ﻿
 namespace CarPriceComparison.API.Models.DTO;
 
-public class VehicleUpdateDto
+public class VehicleCreateDto
 {
-    public long VehicleId { get; set; }
     public string Brand { get; set; }
     public string Model { get; set; }
     public int Year { get; set; }

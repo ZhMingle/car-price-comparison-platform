@@ -55,57 +55,20 @@ public class VehicleController : ControllerBase
     }
     
     /// <summary>
-    /// Creates a new vehicle.
-    /// </summary>
-    /// <param name="Vehicle">The vehicle to create.</param>
-    /// <returns>The created vehicle.</returns>
-    /// <response code="200">successfully return</response>
-    [HttpPost]
-    public IActionResult Add(Vehicle vehicle)
-    {
-        _vehicleService.Add(vehicle);
-        return Ok();
-    }
-    
-    /// <summary>
     /// Updates an existing vehicle.
     /// </summary>
-    /// <param name="vehicleId">The ID of the vehicle to update.</param>
     /// <param name="vehicle">The updated vehicle data.</param>
     /// <returns>No content if successful.</returns>
     /// <response code="200">successfully return</response>
-    [HttpPut("{vehicleId:long}")]
-    public IActionResult Update(long vehicleId, [FromBody] Vehicle vehicle)
+    [HttpPut("")]
+    public IActionResult Update([FromBody] VehicleUpdateDto vehicleDto)
     {
-        if (vehicleId != vehicle.VehicleId)
-        {
-            return BadRequest();
-        }
-
-        var result = _vehicleService.Update(vehicle);
+        var result = _vehicleService.Update(vehicleDto);
         if (!result)
         {
             return NotFound();
         }
 
-        return Ok();
-    }
-    
-    /// <summary>
-    /// Partially updates an existing vehicle.
-    /// </summary>
-    /// <param name="vehicleId">The ID of the vehicle to update.</param>
-    /// <param name="vehicleDto">The vehicle data with fields to update.</param>
-    /// <returns>No content if successful.</returns>
-    /// <response code="200">successfully return</response>
-    [HttpPatch("{vehicleId:long}")]
-    public IActionResult UpdatePartial(long vehicleId, [FromBody] VehicleUpdateDto vehicleUpdateDto)
-    {
-        var result = _vehicleService.UpdatePartial(vehicleId, vehicleUpdateDto);
-        if (!result)
-        {
-            return NotFound();
-        }
         return Ok();
     }
     

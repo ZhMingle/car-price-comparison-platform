@@ -1,4 +1,5 @@
-﻿using CarPriceComparison.API.Data;
+﻿using AutoMapper;
+using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.Services.Interface;
@@ -9,10 +10,12 @@ public class VehicleService : IVehicleService
 {
     
     private readonly ApplicationDbContext _context;
+    private readonly IMapper _mapper;
 
-    public VehicleService(ApplicationDbContext context)
+    public VehicleService(ApplicationDbContext context, IMapper mapper)
     {
         _context = context;
+        _mapper = mapper;
     }
 
 
@@ -31,59 +34,32 @@ public class VehicleService : IVehicleService
         return _context.Vehicles.Find(vehicleId);
     }
 
-    public bool Add(Vehicle vehicle)
+    public bool Add(VehicleCreateDto vehicleDto)
     {
+        var vehicle = _mapper.Map<Vehicle>(vehicleDto);
+        vehicle.ScrapedDate = DateTime.Now;
+        vehicle.CreateTime = DateTime.Now;
+        vehicle.UpdateTime = DateTime.Now;
+        
         _context.Vehicles.Add(vehicle);
         _context.SaveChanges();
         return true;
     }
 
-    public bool Update(Vehicle vehicle)
+    public bool Update(VehicleUpdateDto vehicleDto)
     {
-        var existVehicle = _context.Vehicles.Find(vehicle.VehicleId);
+        var existVehicle = _context.Vehicles.Find(vehicleDto.VehicleId);
         if (null == existVehicle)
         {
             return false;
         }
         
-        existVehicle.Brand = vehicle.Brand;
-        // we can add more fields here
+        _mapper.Map(vehicleDto, existVehicle);
+        existVehicle.UpdateTime = DateTime.Now;
+        _context.Vehicles.Update(existVehicle);
 
         _context.SaveChanges();
         return true;
-    }
-
-    public bool UpdatePartial(long vehicleId, VehicleUpdateDto dto)
-    {
-        var existingVehicle = _context.Vehicles.Find(vehicleId);
-        if (existingVehicle == null)
-        {
-            return false;
-        }
-
-        // 动态更新字段
-        var properties = typeof(VehicleUpdateDto).GetProperties();
-        foreach (var property in properties)
-        {
-            var newValue = property.GetValue(dto);
-            if (newValue != null && !newValue.Equals(GetDefault(property.PropertyType)))
-            {
-                var propertyInfo = existingVehicle.GetType().GetProperty(property.Name);
-                if (propertyInfo != null && propertyInfo.CanWrite)
-                {
-                    propertyInfo.SetValue(existingVehicle, newValue);
-                    _context.Entry(existingVehicle).Property(propertyInfo.Name).IsModified = true;
-                }
-            }
-        }
-
-        _context.SaveChanges();
-        return true;
-    }
-    
-    private static object GetDefault(Type type)
-    {
-        return type.IsValueType ? Activator.CreateInstance(type) : null;
     }
 
     public bool Delete(long vehicleId)

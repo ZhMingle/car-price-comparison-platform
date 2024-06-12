@@ -9,5 +9,4 @@ public class UserUpdateDto
     public string? Email { get; set; }
     public string? Mobile { get; set; }
     public byte? Status { get; set; }  
-    public DateTime? UpdateTime { get; set; }
 }

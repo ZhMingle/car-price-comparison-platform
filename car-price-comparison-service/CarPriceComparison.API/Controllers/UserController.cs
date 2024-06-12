@@ -87,23 +87,6 @@ public class UserController : ControllerBase
     }
     
     /// <summary>
-    /// Partially updates an existing user.
-    /// </summary>
-    /// <param name="dto">The user data with fields to update.</param>
-    /// <returns>No content if successful.</returns>
-    /// <response code="200">successfully return</response>
-    [HttpPatch("")]
-    public IActionResult UpdateUserPartial([FromBody] UserUpdateDto dto)
-    {
-        var result = _userService.UpdatePartial(dto);
-        if (!result)
-        {
-            return NotFound();
-        }
-        return Ok();
-    }
-    
-    /// <summary>
     /// Deletes a user.
     /// </summary>
     /// <param name="userId">The ID of the user to delete.</param>
