@@ -31,10 +31,11 @@ public class UserService : IUserService
         return _context.Users.Find(userId);
     }
 
-    public async Task Add(User user)
+    public bool Add(User user)
     {
         _context.Users.Add(user);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
+        return true;
     }
 
     public bool Update(User user)

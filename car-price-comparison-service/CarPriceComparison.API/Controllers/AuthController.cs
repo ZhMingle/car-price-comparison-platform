@@ -57,7 +57,7 @@ public class AuthController : ControllerBase
     /// <response code="400">If the username already exists or validation fails</response>
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDto model)
+    public IActionResult Register([FromBody] RegisterDto model)
     {
         var result = _userService.CheckUsernameExist(model.Username);
         if (!result)
@@ -75,7 +75,7 @@ public class AuthController : ControllerBase
         user.CreateTime = DateTime.Now;
         user.UpdateTime = DateTime.Now;
 
-        await _userService.Add(user);
+        _userService.Add(user);
         
         return Ok();
     }

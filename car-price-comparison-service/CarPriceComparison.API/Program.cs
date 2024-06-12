@@ -53,10 +53,10 @@ builder.Services.AddTransient<VehicleService>();
 // Auth filter config
 builder.Services.AddControllers(config =>
 {
-    var policy = new AuthorizationPolicyBuilder()
+    /*var policy = new AuthorizationPolicyBuilder()
         .RequireAuthenticatedUser()
         .Build();
-    config.Filters.Add(new AuthorizeFilter(policy));
+    config.Filters.Add(new AuthorizeFilter(policy));*/
 });
 
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle

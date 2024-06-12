@@ -31,10 +31,11 @@ public class VehicleService : IVehicleService
         return _context.Vehicles.Find(vehicleId);
     }
 
-    public async Task Add(Vehicle vehicle)
+    public bool Add(Vehicle vehicle)
     {
         _context.Vehicles.Add(vehicle);
-        await _context.SaveChangesAsync();
+        _context.SaveChanges();
+        return true;
     }
 
     public bool Update(Vehicle vehicle)

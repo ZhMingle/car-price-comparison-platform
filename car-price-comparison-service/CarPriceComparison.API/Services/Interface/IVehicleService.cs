@@ -7,7 +7,7 @@ public interface IVehicleService
 {
     VehicleList GetAll(int pageNum, int pageSize);
     Vehicle GetById(long vehicleId);
-    Task Add(Vehicle vehicle);
+    bool Add(Vehicle vehicle);
     bool Update(Vehicle vehicle);
     bool UpdatePartial(long vehicleId, UpdateVehicleDto vehicleDto);
     bool Delete(long vehicleId);
