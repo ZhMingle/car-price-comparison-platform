@@ -1,5 +1,6 @@
 ﻿using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
+using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;

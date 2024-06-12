@@ -1,5 +1,6 @@
 using System.Text;
 using CarPriceComparison.API.Data;
+using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Authorization;

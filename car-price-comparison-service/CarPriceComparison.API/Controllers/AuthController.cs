@@ -1,6 +1,7 @@
 ﻿using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.Base;
 using CarPriceComparison.API.Models.DTO;
+using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
@@ -34,7 +35,7 @@ public class AuthController : ControllerBase
     /// <response code="401">If the credentials are invalid</response>
     [AllowAnonymous]
     [HttpPost("login")]
-    public async Task<IActionResult> Login([FromBody] LoginDTO model)
+    public async Task<IActionResult> Login([FromBody] LoginDto model)
     {
         // auth user
         var user = await _userService.ValidateUser(model.Username, model.Password);
@@ -56,7 +57,7 @@ public class AuthController : ControllerBase
     /// <response code="400">If the username already exists or validation fails</response>
     [AllowAnonymous]
     [HttpPost("register")]
-    public async Task<IActionResult> Register([FromBody] RegisterDTO model)
+    public async Task<IActionResult> Register([FromBody] RegisterDto model)
     {
         var result = _userService.CheckUsernameExist(model.Username);
         if (!result)

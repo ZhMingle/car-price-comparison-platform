@@ -1,7 +1,7 @@
 ﻿using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
 
-namespace CarPriceComparison.API.UserServices.Interface;
+namespace CarPriceComparison.API.Services.Interface;
 
 public interface IUserService
 {

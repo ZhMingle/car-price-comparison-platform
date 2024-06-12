@@ -1,10 +1,10 @@
 ﻿using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.DTO;
-using CarPriceComparison.API.UserServices.Interface;
+using CarPriceComparison.API.Services.Interface;
 using Microsoft.EntityFrameworkCore;
 
-namespace CarPriceComparison.API.UserServices;
+namespace CarPriceComparison.API.Services;
 
 public class UserService : IUserService
 {
