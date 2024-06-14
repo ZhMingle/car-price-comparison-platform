@@ -11,6 +11,7 @@ public class ApplicationDbContext : DbContext
 
     public DbSet<User> Users { get; set; }
     public DbSet<Vehicle> Vehicles { get; set; }
+    public DbSet<Dealer> Dealers { get; set; }
     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -18,5 +19,6 @@ public class ApplicationDbContext : DbContext
         // Mapping between tables and objects
         modelBuilder.Entity<User>().ToTable("auto_user");
         modelBuilder.Entity<Vehicle>().ToTable("auto_vehicle");
+        modelBuilder.Entity<Dealer>().ToTable("auto_dealer");
     }
 }

@@ -12,6 +12,12 @@ public static class Constants
     {
         public const int Normal = 1;
         public const int Disable = 0;
+    }    
+    
+    public static class DealerStatus
+    {
+        public const int Normal = 1;
+        public const int Disable = 0;
     }
     
     public static class AdminUser

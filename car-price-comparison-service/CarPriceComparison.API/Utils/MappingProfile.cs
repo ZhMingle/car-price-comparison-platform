@@ -17,5 +17,9 @@ public class MappingProfile : Profile
         CreateMap<VehicleUpdateDto, Vehicle>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
+        CreateMap<DealerCreateDto, Dealer>();
+        CreateMap<DealerUpdateDto, Dealer>()
+            .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
+
     }
 }
