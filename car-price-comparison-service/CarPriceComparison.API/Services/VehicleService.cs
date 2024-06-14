@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Models;
+using CarPriceComparison.API.Models.Base;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.Services.Interface;
 
@@ -22,7 +23,7 @@ public class VehicleService : IVehicleService
     public VehicleList GetAll(int pageNumber, int pageSize)
     {
         var totalRecords = _context.Vehicles.Count();
-        var vehicles = _context.Vehicles.OrderBy(u => u.VehicleId)
+        var vehicles = _context.Vehicles.Where(v => v.Status == Constants.VehicleStatus.Normal).OrderBy(v => v.VehicleId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
@@ -31,12 +32,15 @@ public class VehicleService : IVehicleService
 
     public Vehicle GetById(long vehicleId)
     {
-        return _context.Vehicles.Find(vehicleId);
+        return _context.Vehicles
+            .Where(v => v.VehicleId == vehicleId && v.Status == Constants.VehicleStatus.Normal)
+            .FirstOrDefault();
     }
 
     public bool Add(VehicleCreateDto vehicleDto)
     {
         var vehicle = _mapper.Map<Vehicle>(vehicleDto);
+        vehicle.Status = Constants.VehicleStatus.Normal;
         vehicle.ScrapedDate = DateTime.Now;
         vehicle.CreateTime = DateTime.Now;
         vehicle.UpdateTime = DateTime.Now;
@@ -70,7 +74,9 @@ public class VehicleService : IVehicleService
             return false;
         }
 
-        _context.Vehicles.Remove(vehicle);
+        // logical delete
+        vehicle.Status = Constants.VehicleStatus.Disable;
+        _context.Vehicles.Update(vehicle);
         _context.SaveChanges();
         return true;
     }

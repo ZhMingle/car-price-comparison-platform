@@ -12,5 +12,6 @@ public class VehicleUpdateDto
     public string? Color { get; set; }
     public decimal CurrentPrice { get; set; }
     public string? Location { get; set; }
+    public byte? Status { get; set; }  
     public string? Source { get; set; }
 }

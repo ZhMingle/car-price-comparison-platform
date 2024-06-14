@@ -42,6 +42,9 @@ public class Vehicle
 
     [Column("listing_date")]
     public DateTime? ListingDate { get; set; }
+    
+    [Column("status")]
+    public byte? Status { get; set; }  
 
     [Column("source")]
     public string? Source { get; set; }

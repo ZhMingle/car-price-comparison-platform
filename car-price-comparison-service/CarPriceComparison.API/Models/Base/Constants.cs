@@ -8,6 +8,12 @@ public static class Constants
         public const int Disable = 0;
     }
     
+    public static class VehicleStatus
+    {
+        public const int Normal = 1;
+        public const int Disable = 0;
+    }
+    
     public static class AdminUser
     {
         public const int CreateUserId = 1;

@@ -23,7 +23,8 @@ public class UserService : IUserService
     public UserList GetAll(int pageNumber, int pageSize)
     {
         var totalRecords = _context.Users.Count();
-        var users = _context.Users.OrderBy(u => u.UserId)
+        var users = _context.Users.Where(u => u.Status == Constants.UserStatus.Normal)
+            .OrderBy(u => u.UserId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
@@ -32,7 +33,8 @@ public class UserService : IUserService
 
     public User GetById(long userId)
     {
-        return _context.Users.Find(userId);
+        return _context.Users.Where(u => u.UserId == userId && u.Status == Constants.UserStatus.Normal)
+            .FirstOrDefault();
     }
 
     public bool Add(UserCreateDto userCreateDto)
@@ -72,7 +74,8 @@ public class UserService : IUserService
             return false;
         }
 
-        _context.Users.Remove(user);
+        user.Status = Constants.UserStatus.Disable;
+        _context.Users.Update(user);
         _context.SaveChanges();
         return true;
     }
