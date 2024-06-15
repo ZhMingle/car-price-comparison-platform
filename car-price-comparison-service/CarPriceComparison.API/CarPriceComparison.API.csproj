@@ -28,4 +28,12 @@
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.10.0" />
     </ItemGroup>
 
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="publish\web.config" />
+      <_ContentIncludedByDefault Remove="publish\appsettings.Development.json" />
+      <_ContentIncludedByDefault Remove="publish\appsettings.json" />
+      <_ContentIncludedByDefault Remove="publish\CarPriceComparison.API.deps.json" />
+      <_ContentIncludedByDefault Remove="publish\CarPriceComparison.API.runtimeconfig.json" />
+    </ItemGroup>
+
 </Project>
