@@ -1,5 +1,6 @@
 using System.Text;
 using CarPriceComparison.API.Data;
+using CarPriceComparison.API.Exception;
 using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
 using CarPriceComparison.API.Utils;
@@ -77,6 +78,18 @@ builder.Services.AddSwaggerGen(c =>
 });
 
 var app = builder.Build();
+
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.UseDeveloperExceptionPage();
+}
+else
+{
+    // Exceptional Handler
+    app.UseMiddleware<ExceptionHandler>();
+    app.UseHsts();
+}
 
 // Configure the HTTP request pipeline.
 app.UseSwagger();
