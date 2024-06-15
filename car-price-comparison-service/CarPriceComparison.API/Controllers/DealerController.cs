@@ -2,6 +2,7 @@
 using CarPriceComparison.API.Services;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Serilog;
 
 namespace CarPriceComparison.API.Controllers;
 

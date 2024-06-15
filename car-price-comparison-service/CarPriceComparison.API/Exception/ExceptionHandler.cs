@@ -1,5 +1,6 @@
 ﻿using System.Net;
 using CarPriceComparison.API.Models;
+using Serilog;
 
 namespace CarPriceComparison.API.Exception;
 
@@ -20,6 +21,7 @@ public class ExceptionHandler
         }
         catch (System.Exception ex)
         {
+            Log.Error(ex, "An unhandled exception has occurred.");
             await HandleExceptionAsync(httpContext, ex);
         }
     }
