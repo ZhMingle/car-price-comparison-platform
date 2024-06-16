@@ -1,6 +1,7 @@
 using System.Text;
 using CarPriceComparison.API.Data;
 using CarPriceComparison.API.Exception;
+using CarPriceComparison.API.Job;
 using CarPriceComparison.API.Services;
 using CarPriceComparison.API.UserServices;
 using CarPriceComparison.API.Utils;
@@ -8,6 +9,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Quartz;
 using Serilog;
 using Serilog.Exceptions;
 
@@ -20,6 +22,30 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.Console()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
+
+builder.Host.UseSerilog();
+
+// Quartz.NET
+builder.Services.AddQuartz(q =>
+{
+    q.UseMicrosoftDependencyInjectionJobFactory();
+
+    var dealer01JobKey = new JobKey("Dealer01Crawler");
+    q.AddJob<Dealer01CrawlerJob>(opts => opts.WithIdentity(dealer01JobKey));
+    q.AddTrigger(opts => opts
+        .ForJob(dealer01JobKey)
+        .WithIdentity("Dealer01Crawler-trigger")
+        .WithCronSchedule("0/10 * * * * ?")); 
+    
+    /*var dealer02Crawler = new JobKey("Dealer02Crawler");
+    q.AddJob<Dealer02CrawlerJob>(opts => opts.WithIdentity(dealer02Crawler));
+    q.AddTrigger(opts => opts
+        .ForJob(dealer02Crawler)
+        .WithIdentity("Dealer02Crawler-trigger")
+        .WithCronSchedule("0/50 * * * * ?")); */
+});
+
+builder.Services.AddQuartzHostedService(q => q.WaitForJobsToComplete = true);
 
 // Register AutoMapper with a specific profile
 builder.Services.AddAutoMapper(typeof(MappingProfile));
