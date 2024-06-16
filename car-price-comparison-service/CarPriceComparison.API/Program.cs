@@ -21,6 +21,8 @@ Log.Logger = new LoggerConfiguration()
     .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
     .CreateLogger();
 
+builder.Host.UseSerilog();
+
 // Register AutoMapper with a specific profile
 builder.Services.AddAutoMapper(typeof(MappingProfile));
 
