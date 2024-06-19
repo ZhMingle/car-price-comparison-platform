@@ -11,11 +11,13 @@ public class DealerService : IDealerService
     
     private readonly ApplicationDbContext _context;
     private readonly IMapper _mapper;
+    private readonly VehicleService _vehicleService;
 
-    public DealerService(ApplicationDbContext context, IMapper mapper)
+    public DealerService(ApplicationDbContext context, IMapper mapper, VehicleService vehicleService)
     {
         _context = context;
         _mapper = mapper;
+        _vehicleService = vehicleService;
     }
     
     public DealerList GetAll(int pageNumber, int pageSize)
@@ -74,6 +76,9 @@ public class DealerService : IDealerService
         dealer.Status = Constants.DealerStatus.Disable;
         _context.Dealers.Update(dealer);
         _context.SaveChanges();
+
+        _vehicleService.UpdateStatusByVDealerId(dealerId);
+        
         return true;
     }
 

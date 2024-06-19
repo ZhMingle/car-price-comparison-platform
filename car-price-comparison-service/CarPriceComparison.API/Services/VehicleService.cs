@@ -4,6 +4,7 @@ using CarPriceComparison.API.Models;
 using CarPriceComparison.API.Models.Base;
 using CarPriceComparison.API.Models.DTO;
 using CarPriceComparison.API.Services.Interface;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarPriceComparison.API.Services;
 
@@ -63,6 +64,17 @@ public class VehicleService : IVehicleService
         _context.Vehicles.Update(existVehicle);
 
         _context.SaveChanges();
+        return true;
+    }
+
+    public bool UpdateStatusByVDealerId(long dealerId)
+    {
+        // 生成SQL语句
+        // 生成SQL语句
+        string sql = "UPDATE auto_vehicle SET status = {0}, update_time = {2} WHERE dealer_id = {1}";
+        
+        // 执行SQL命令
+        _context.Database.ExecuteSqlRaw(sql, Constants.VehicleStatus.Disable, dealerId, DateTime.Now);
         return true;
     }
 

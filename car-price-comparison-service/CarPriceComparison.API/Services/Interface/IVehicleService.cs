@@ -9,5 +9,6 @@ public interface IVehicleService
     Vehicle GetById(long vehicleId);
     bool Add(VehicleCreateDto vehicleDto);
     bool Update(VehicleUpdateDto vehicleDto);
+    bool UpdateStatusByVDealerId(long dealerId);
     bool Delete(long vehicleId);
 }
