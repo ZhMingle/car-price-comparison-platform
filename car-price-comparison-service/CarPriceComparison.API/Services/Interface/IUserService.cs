@@ -7,6 +7,7 @@ public interface IUserService
 {
     UserList GetAll(int pageNum, int pageSize);
     User GetById(long id);
+    User GetByName(string username);
     bool Add(UserCreateDto userCreate);
     bool Update(UserUpdateDto userUpdateDto);
     bool Delete(long id);

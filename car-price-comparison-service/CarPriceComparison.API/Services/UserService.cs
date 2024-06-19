@@ -37,6 +37,18 @@ public class UserService : IUserService
             .FirstOrDefault();
     }
 
+    public User GetByName(string username)
+    {
+        var existUser = _context.Users.Where(u => u.Username.Equals(username))
+            .FirstOrDefault();
+        if (null == existUser)
+        {
+            return null;
+        }
+
+        return existUser;
+    }
+
     public bool Add(UserCreateDto userCreateDto)
     {
         // UserDTO mapper to User

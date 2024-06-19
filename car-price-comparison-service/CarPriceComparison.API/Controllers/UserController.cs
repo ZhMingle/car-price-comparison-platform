@@ -65,6 +65,11 @@ public class UserController : ControllerBase
     [HttpPost]
     public IActionResult Add(UserCreateDto createDto)
     {
+        var existUser = _userService.GetByName(createDto.Username);
+        if (null != existUser)
+        {
+            return BadRequest("username has been existed");
+        }
         _userService.Add(createDto);
         return Ok();
     }
