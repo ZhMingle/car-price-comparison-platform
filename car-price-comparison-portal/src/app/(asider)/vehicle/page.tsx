@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { Button, Space, Form, Input, InputNumber, Popconfirm, Table, Typography } from 'antd'
 import type { TableProps } from 'antd'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
+import qs from 'qs'
 import { delVehicle, getVehicle } from '@/api'
 
 interface Item {
@@ -77,7 +78,11 @@ const Vehicle: React.FC = () => {
   const [form] = Form.useForm()
   const [data, setData] = useState(originData)
   const [editingKey, setEditingKey] = useState('')
-
+  const [loading, setLoading] = useState(false)
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  })
   const isEditing = (record: Item) => record.key === editingKey
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
@@ -93,21 +98,7 @@ const Vehicle: React.FC = () => {
     try {
       const row = (await form.validateFields()) as Item
 
-      const newData = [...data]
-      const index = newData.findIndex(item => key === item.key)
-      if (index > -1) {
-        const item = newData[index]
-        newData.splice(index, 1, {
-          ...item,
-          ...row,
-        })
-        setData(newData)
-        setEditingKey('')
-      } else {
-        newData.push(row)
-        setData(newData)
-        setEditingKey('')
-      }
+      setEditingKey('')
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo)
     }
@@ -265,15 +256,25 @@ const Vehicle: React.FC = () => {
   })
   useEffect(() => {
     getData()
-  }, [])
+  }, [pagination.current, pagination.pageSize])
   async function getData() {
-    const res = await getVehicle()
+    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize })
+    setLoading(true)
+    const res = await getVehicle(query)
+    setLoading(false)
     if (Array.isArray(res.data.vehicles)) {
       setData(res.data.vehicles as any)
+      setPagination({
+        ...pagination,
+        total: res.data.total,
+      })
     }
   }
   function confirmDel(vehicleId) {
     delVehicle(vehicleId)
+  }
+  function handleTableChange(_pagination: any) {
+    setPagination(_pagination)
   }
   return (
     <>
@@ -297,9 +298,15 @@ const Vehicle: React.FC = () => {
           columns={mergedColumns}
           rowClassName="editable-row"
           pagination={{
+            ...pagination,
             onChange: cancel,
+            pageSizeOptions: [10, 20, 30, 50],
+            showSizeChanger: true,
+            showTotal: v => `Total ${v} item`,
           }}
+          loading={loading}
           scroll={{ x: 'max-content' }}
+          onChange={handleTableChange}
           size="small"
         />
       </Form>
