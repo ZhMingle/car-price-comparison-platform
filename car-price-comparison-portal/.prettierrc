@@ -1,5 +1,4 @@
 {
-  "extends": "next/core-web-vitals",
   "printWidth": 140,
   "semi": false,
   "singleQuote": true,

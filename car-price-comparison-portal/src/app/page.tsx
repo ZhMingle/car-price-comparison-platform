@@ -1,6 +1,7 @@
-import Link from "next/link";
-import Stack from "@mui/material/Stack";
-import Button from "@mui/material/Button";
+'use client'
+import Link from 'next/link'
+import Stack from '@mui/material/Stack'
+import Button from '@mui/material/Button'
 export default function Home() {
   return (
     <main>
@@ -18,5 +19,5 @@ export default function Home() {
       </header>
       <div>car-list</div>
     </main>
-  );
+  )
 }
