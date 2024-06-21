@@ -31,9 +31,9 @@ public class DealerController : ControllerBase
     /// <returns>A list of dealers.</returns>
     /// <response code="200">successfully return</response>
     [HttpGet("")]
-    public ActionResult<DealerList> GetList(int pageNumber = 1, int pageSize = 10)
+    public ActionResult<DealerList> GetList(String? name, int pageNumber = 1, int pageSize = 10)
     {
-        return Ok(_dealerService.GetAll(pageNumber, pageSize));
+        return Ok(_dealerService.GetAll(name, pageNumber, pageSize));
     }
     
     /// <summary>
@@ -51,7 +51,7 @@ public class DealerController : ControllerBase
             return NotFound();
         }
         
-        return Ok(dealer);
+        return Ok(new DealerList(1, new[] { dealer }));
     }
     
     /// <summary>

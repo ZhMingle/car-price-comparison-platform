@@ -31,9 +31,9 @@ public class VehicleController : ControllerBase
     /// <returns>A list of vehicles.</returns>
     /// <response code="200">successfully return</response>
     [HttpGet("")]
-    public ActionResult<VehicleList> GetList(int pageNumber = 1, int pageSize = 10)
+    public ActionResult<VehicleList> GetList(string? brand, string? model, int? year, int pageNumber = 1, int pageSize = 10)
     {
-        return Ok(_vehicleService.GetAll(pageNumber, pageSize));
+        return Ok(_vehicleService.GetAll(brand, model, year, pageNumber, pageSize));
     }
     
     /// <summary>
@@ -51,7 +51,7 @@ public class VehicleController : ControllerBase
             return NotFound();
         }
         
-        return Ok(vehicle);
+        return Ok(new VehicleList(1, new[] { vehicle }));
     }
     
     /// <summary>

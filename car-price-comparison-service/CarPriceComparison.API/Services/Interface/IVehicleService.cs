@@ -5,7 +5,7 @@ namespace CarPriceComparison.API.Services.Interface;
 
 public interface IVehicleService
 {
-    VehicleList GetAll(int pageNum, int pageSize);
+    VehicleList GetAll(string? brand, string? model, int? year, int pageNum, int pageSize);
     Vehicle GetById(long vehicleId);
     bool Add(VehicleCreateDto vehicleDto);
     bool Update(VehicleUpdateDto vehicleDto);

@@ -20,14 +20,23 @@ public class DealerService : IDealerService
         _vehicleService = vehicleService;
     }
     
-    public DealerList GetAll(int pageNumber, int pageSize)
+    public DealerList GetAll(String? name, int pageNumber, int pageSize)
     {
-        var totalRecords = _context.Dealers.Count();
-        var dealers = _context.Dealers.Where(u => u.Status == Constants.DealerStatus.Normal)
+        var query = _context.Dealers.AsQueryable();
+        query = query.Where(d =>d.Status == Constants.DealerStatus.Normal);
+        
+        if (!string.IsNullOrEmpty(name))
+        {
+            query = query.Where(d => d.Name.Contains(name));
+        }
+        
+        var totalRecords = query.Count();
+        var dealers = query
             .OrderBy(d => d.DealerId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
+        
         return new DealerList(totalRecords, dealers);
     }
 

@@ -21,13 +21,33 @@ public class VehicleService : IVehicleService
     }
 
 
-    public VehicleList GetAll(int pageNumber, int pageSize)
+    public VehicleList GetAll(string? brand, string? model, int? year, int pageNumber, int pageSize)
     {
-        var totalRecords = _context.Vehicles.Count();
-        var vehicles = _context.Vehicles.Where(v => v.Status == Constants.VehicleStatus.Normal).OrderBy(v => v.VehicleId)
+        var query = _context.Vehicles.AsQueryable();
+        query = query.Where(d =>d.Status == Constants.VehicleStatus.Normal);
+        
+        if (!string.IsNullOrEmpty(brand))
+        {
+            query = query.Where(v => v.Brand.Contains(brand));
+        }
+        
+        if (!string.IsNullOrEmpty(model))
+        {
+            query = query.Where(v => v.Model.Contains(model));
+        }
+        
+        if (null != year)
+        {
+            query = query.Where(v => v.Year.Equals(year));
+        }
+        
+        var totalRecords = query.Count();
+        var vehicles = query
+            .OrderBy(v => v.VehicleId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
+        
         return new VehicleList(totalRecords, vehicles);
     }
 

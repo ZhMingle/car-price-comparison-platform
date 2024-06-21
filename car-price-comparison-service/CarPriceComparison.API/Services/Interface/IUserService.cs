@@ -5,7 +5,7 @@ namespace CarPriceComparison.API.Services.Interface;
 
 public interface IUserService
 {
-    UserList GetAll(int pageNum, int pageSize);
+    UserList GetAll(String? username, String? mobile, int pageNum, int pageSize);
     User GetById(long id);
     User GetByName(string username);
     bool Add(UserCreateDto userCreate);

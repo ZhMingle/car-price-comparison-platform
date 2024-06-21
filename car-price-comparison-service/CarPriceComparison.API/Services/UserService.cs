@@ -20,14 +20,29 @@ public class UserService : IUserService
         _mapper = mapper;
     }
     
-    public UserList GetAll(int pageNumber, int pageSize)
+    public UserList GetAll(String? username, String? mobile, int pageNumber, int pageSize)
     {
-        var totalRecords = _context.Users.Count();
-        var users = _context.Users.Where(u => u.Status == Constants.UserStatus.Normal)
+        var query = _context.Users.AsQueryable();
+        query = query.Where(u => u.Status == Constants.UserStatus.Normal);
+        
+        if (!string.IsNullOrEmpty(username))
+        {
+            query = query.Where(u => u.Username.Contains(username));
+        }
+        
+        if (!string.IsNullOrEmpty(mobile))
+        {
+            query = query.Where(u => u.Mobile.Contains(mobile));
+        }
+        
+        
+        var totalRecords = query.Count();
+        var users = query
             .OrderBy(u => u.UserId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
+        
         return new UserList(totalRecords, users);
     }
 

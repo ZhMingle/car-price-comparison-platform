@@ -33,9 +33,9 @@ public class UserController : ControllerBase
     /// <returns>A list of users.</returns>
     /// <response code="200">successfully return</response>
     [HttpGet("")]
-    public ActionResult<UserList> GetList(int pageNumber = 1, int pageSize = 10)
+    public ActionResult<UserList> GetList(String? username, String? mobile, int pageNumber = 1, int pageSize = 10)
     {
-        return Ok(_userService.GetAll(pageNumber, pageSize));
+        return Ok(_userService.GetAll(username, mobile, pageNumber, pageSize));
     }
     
     /// <summary>
@@ -53,7 +53,8 @@ public class UserController : ControllerBase
             return NotFound();
         }
         
-        return Ok(user);
+        
+        return Ok(new UserList(1, new[] { user }));
     }
     
     /// <summary>
