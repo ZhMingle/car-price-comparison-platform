@@ -24,8 +24,8 @@ export function delUser(id: string) {
   return del(`${PATH}user/${id}`)
 }
 
-export function getVehicle(): Promise<{ data: { vehicles: Item[] } }> {
-  return get(`${PATH}vehicle`)
+export function getVehicle(query: string): Promise<{ data: { vehicles: Item[] } }> {
+  return get(`${PATH}vehicle?${query}`)
 }
 export function getVehicleDetail(id: string) {
   return get(`${PATH}vehicle/${id}`)

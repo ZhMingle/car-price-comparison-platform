@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Form, Table, Button, Space, Input, InputNumber, Popconfirm, Typography } from 'antd'
-import type { TableProps } from 'antd'
+import type { GetProp, TableProps } from 'antd'
 import qs from 'qs'
 import { delUser, getUser, updateUser } from '@/api'
 import AddUserModal from './AddUserModal'
@@ -60,12 +60,25 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
     </td>
   )
 }
-
+type TablePaginationConfig = Exclude<GetProp<TableProps, 'pagination'>, boolean>
+interface TableParams {
+  pagination?: TablePaginationConfig
+  sortField?: string
+  sortOrder?: string
+  filters?: Parameters<GetProp<TableProps, 'onChange'>>[1]
+}
 const User: React.FC = () => {
   const [data, setData] = useState<Item[]>([])
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [loading, setLoading] = useState(false)
-  const [pagination, setPagination] = useState({ current: 1, pageSize: 10, total: 0 })
+  const [tableParams, setTableParams] = useState<TableParams>({
+    pagination: {
+      current: 1,
+      pageSize: 10,
+      pageSizeOptions: [10, 20, 30, 50],
+      showSizeChanger: true,
+    },
+  })
   const [form] = Form.useForm()
   const [editingKey, setEditingKey] = useState('')
 
@@ -82,19 +95,22 @@ const User: React.FC = () => {
 
   useEffect(() => {
     getData()
-  }, [pagination?.current, pagination?.pageSize])
+  }, [tableParams.pagination?.current, tableParams.pagination?.pageSize])
 
   function getData() {
-    const query = qs.stringify({ pageNumber: pagination.current, pageSize: pagination.pageSize })
+    const query = qs.stringify({ pageNumber: tableParams.pagination?.current, pageSize: tableParams.pagination?.pageSize })
     setLoading(true)
     getUser(query).then(res => {
       setLoading(false)
       if (Array.isArray(res.data?.users)) {
         setData(res.data.users.map(i => ({ ...(i as object), key: i.userId })) as any)
 
-        setPagination({
-          ...pagination,
-          total: res.data.total,
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            total: res.data.total,
+          },
         })
       }
     })
@@ -203,11 +219,14 @@ const User: React.FC = () => {
       }),
     }
   })
-  const handleTableChange: TableProps['onChange'] = _pagination => {
-    setPagination(_pagination as any)
-
+  const handleTableChange: TableProps['onChange'] = (pagination, filters, sorter) => {
+    setTableParams({
+      pagination,
+      filters,
+      ...sorter,
+    })
     // `dataSource` is useless since `pageSize` changed
-    if (_pagination.pageSize !== pagination?.pageSize) {
+    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([])
     }
   }
@@ -233,8 +252,9 @@ const User: React.FC = () => {
           columns={mergedColumns}
           rowClassName="editable-row"
           pagination={{
-            ...pagination,
+            ...tableParams.pagination,
             onChange: cancel,
+            showTotal: v => `Total ${v} item`,
           }}
           loading={loading}
           onChange={handleTableChange}
