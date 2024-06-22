@@ -1,9 +1,4 @@
 'use client'
-
-import { Amplify } from 'aws-amplify'
-import amplifyconfig from '../../amplify-build-config.json'
-
-Amplify.configure(amplifyconfig as any)
 export default function Home() {
   return (
     <main>
