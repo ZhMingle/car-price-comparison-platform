@@ -88,7 +88,7 @@ const App: React.FC = () => {
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState('')
   const [loading, setLoading] = useState(false)
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<any>({
     current: 1,
     pageSize: 10,
   })
@@ -191,7 +191,7 @@ const App: React.FC = () => {
     },
   ]
 
-  const mergedColumns: TableProps['columns'] = columns.map(col => {
+  const mergedColumns = columns.map(col => {
     if (!col.editable) {
       return col
     }
@@ -206,7 +206,7 @@ const App: React.FC = () => {
       }),
     }
   })
-  async function onSearch(id) {
+  async function onSearch(id: string) {
     if (id) {
       const res = await filterDealer(id)
       res.data && setData([res.data].map(i => ({ ...(i as object), key: i.dealerId })) as any)
@@ -242,7 +242,7 @@ const App: React.FC = () => {
           }}
           bordered
           dataSource={data}
-          columns={mergedColumns}
+          columns={mergedColumns as any}
           rowClassName="editable-row"
           pagination={{
             ...pagination,

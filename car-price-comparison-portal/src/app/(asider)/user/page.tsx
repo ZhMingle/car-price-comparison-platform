@@ -104,7 +104,7 @@ const User: React.FC = () => {
     getUser(query).then(res => {
       setLoading(false)
       if (Array.isArray(res.data?.users)) {
-        setData(res.data.users.map(i => ({ ...(i as object), key: i.userId })) as any)
+        setData(res.data.users.map((i: any) => ({ ...(i as object), key: i.userId })) as any)
 
         setTableParams({
           ...tableParams,
@@ -167,7 +167,7 @@ const User: React.FC = () => {
       title: 'createTime',
       dataIndex: 'createTime',
       key: 'createTime',
-      render: t => <span>{t.split('T').join(' ')}</span>,
+      render: (t: string) => <span>{t.split('T').join(' ')}</span>,
     },
     {
       title: 'updateTime',

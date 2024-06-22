@@ -1,4 +1,4 @@
-import msg from '@/utility'
+import { ShowMessage } from '@/utility'
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 interface RequestOptions {
@@ -11,7 +11,7 @@ interface ResponseData<T> {
   status: number
 }
 
-async function httpRequest<T>(url: string, method: HttpMethod, options?: RequestOptions): Promise<ResponseData<T>> {
+async function httpRequest<T>(url: string, method: HttpMethod, options?: RequestOptions): Promise<any> {
   const { headers, body } = options || {}
 
   const response = await fetch(url, {
@@ -25,7 +25,7 @@ async function httpRequest<T>(url: string, method: HttpMethod, options?: Request
   })
   if ([401, 400].includes(response.status)) {
     const text = await response.text()
-    msg.error(text)
+    ShowMessage.error(text)
   }
   if (['GET'].includes(method)) {
     const responseData = await response.json()

@@ -14,7 +14,7 @@ type FieldType = {
 }
 
 const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any) {
-  const formRef = useRef(null)
+  const formRef = useRef<any>(null)
   const handleOk = () => {
     formRef.current?.submit()
   }
@@ -40,7 +40,7 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = errorInfo => {
     console.log('Failed:', errorInfo)
   }
-  function handleKeyDown(e) {
+  function handleKeyDown(e: any) {
     // Enter
     if (e.keyCode === 13) {
       formRef.current?.submit()
@@ -82,7 +82,7 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
                 <Col span={12} key={i.name}>
                   <Form.Item<FieldType>
                     label={i.name}
-                    name={i.name}
+                    name={i.name as any}
                     rules={[{ required: i.required, message: `Please input your ${i.name}!` }]}>
                     <Input />
                   </Form.Item>

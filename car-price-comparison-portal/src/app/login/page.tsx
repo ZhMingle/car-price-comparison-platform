@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { increament } from '@/store/modules/carStore'
 import { RootState } from '@/store/index'
 import { setToken } from '@/store/modules/userStore'
-import msg from '@/utility'
+import { ShowMessage } from '@/utility'
 import { debounce } from 'lodash'
 export default function Login() {
   let [username, setUsername] = useState('')

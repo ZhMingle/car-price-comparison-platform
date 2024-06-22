@@ -4,15 +4,15 @@ import { Item } from './app/(asider)/user/page'
 import { DealerItem } from './app/(asider)/dealer/page'
 import { VehicleItem } from './app/(asider)/vehicle/page'
 
-export function login(data: { username: string; password: string }) {
+export function login(data: { username: string; password: string }): Promise<any> {
   return post(`${PATH}auth/login`, data)
 }
 
-export function register(data: { username: 'string'; password: 'string'; email?: 'string'; mobile?: 'string'; status?: 0 }) {
+export function register(data: any) {
   return post(`${PATH}auth/register`, data)
 }
 
-export function getUser(query: string): Promise<{ data: { users: Item[] } }> {
+export function getUser(query: string): Promise<any> {
   return get(`${PATH}user?${query}`)
 }
 export function addUser(params: any) {
@@ -25,7 +25,7 @@ export function delUser(id: string) {
   return del(`${PATH}user/${id}`)
 }
 
-export function getVehicle(query: string): Promise<{ data: { vehicles: VehicleItem[] } }> {
+export function getVehicle(query: string): Promise<any> {
   return get(`${PATH}vehicle?${query}`)
 }
 export function getVehicleDetail(id: string) {
@@ -38,13 +38,13 @@ export function delVehicle(id: string) {
   return del(`${PATH}vehicle/${id}`)
 }
 
-export function getDealer(query: string): Promise<{ data: { dealers: DealerItem[] } }> {
+export function getDealer(query: string): Promise<{ data: { dealers: DealerItem[]; total: number } }> {
   return get(`${PATH}dealer?${query}`)
 }
-export function addDealer(params) {
+export function addDealer(params: any) {
   return post(`${PATH}dealer`, params)
 }
-export function filterDealer(id: string) {
+export function filterDealer(id: string): Promise<any> {
   return get(`${PATH}dealer/${id}`)
 }
 export function updateDealer(params: Item) {
