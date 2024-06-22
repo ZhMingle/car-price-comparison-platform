@@ -28,12 +28,11 @@ export default function ({ isModalOpen, setIsModalOpen, $getData }: any) {
       ...values,
       status: 0, // default status: 0
     })
-
-    // if (res.status === 200) {
-    //   msg.success('Successfully addition')
-    // }
-    // setIsModalOpen(false)
-    // $getData()
+    if (res.status === 200) {
+      msg.success('Successfully addition')
+    }
+    setIsModalOpen(false)
+    $getData()
   }
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = errorInfo => {
@@ -53,7 +52,7 @@ export default function ({ isModalOpen, setIsModalOpen, $getData }: any) {
           name="basic"
           labelCol={{ span: 6 }}
           wrapperCol={{ span: 16 }}
-          initialValues={{ remember: true }}
+          initialValues={{ remember: false }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           onKeyDown={handleKeyDown}

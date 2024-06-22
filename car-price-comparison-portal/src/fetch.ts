@@ -27,15 +27,17 @@ async function httpRequest<T>(url: string, method: HttpMethod, options?: Request
     const text = await response.text()
     msg.error(text)
   }
-  console.log(response)
-  try {
+  if (['GET'].includes(method)) {
     const responseData = await response.json()
     return {
       data: responseData,
       status: response.status,
     }
-  } catch (e) {
-    console.error(e)
+  } else {
+    const res = await {
+      status: response.status,
+    }
+    return res
   }
 }
 

@@ -1,6 +1,6 @@
 import { message } from 'antd'
 
-export default class ShowMessage {
+export class ShowMessage {
   static success(options: string, ss = 2) {
     this.message('success', options, ss)
   }

@@ -1,9 +1,10 @@
 // 'use client'
 import { useState, useRef } from 'react'
-import { Modal, Form, Input, Button } from 'antd'
+import { Modal, Form, Input, Button, Col, Row } from 'antd'
 import type { FormProps } from 'antd'
 import { addUser } from '@/api'
-import msg from '@/utility'
+import { ShowMessage } from '@/utility'
+import { DealerItem } from './page'
 
 type FieldType = {
   username?: string
@@ -30,7 +31,7 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
     })
 
     // if (res.status === 200) {
-    //   msg.success('Successfully addition')
+    //   ShowMessage.success('Successfully addition')
     // }
     // setIsModalOpen(false)
     // $getData()
@@ -45,32 +46,50 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
       formRef.current?.submit()
     }
   }
+
+  const Fields = [
+    {
+      name: 'name',
+      required: true,
+    },
+    { name: 'address', required: true },
+    { name: 'city', required: true },
+    { name: 'state', required: true },
+    { name: 'zipCode', required: true },
+    { name: 'country', required: true },
+    { name: 'phone', required: true },
+    { name: 'email', required: true },
+    { name: 'website', required: true },
+    { name: 'status', required: true },
+    { name: 'address', required: true },
+  ]
   return (
     <>
       <Modal title="Add Dealer" open={isModalOpen} onOk={handleOk} onCancel={handleCancel}>
         <Form
           ref={formRef}
           name="basic"
-          labelCol={{ span: 6 }}
-          wrapperCol={{ span: 16 }}
+          labelCol={{ span: 10 }}
+          wrapperCol={{ span: 14 }}
           initialValues={{ remember: true }}
           onFinish={onFinish}
           onFinishFailed={onFinishFailed}
           onKeyDown={handleKeyDown}
           autoComplete="off">
-          <Form.Item<FieldType> label="Username" name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
-            <Input />
-          </Form.Item>
-
-          <Form.Item<FieldType> label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
-            <Input.Password />
-          </Form.Item>
-          <Form.Item<FieldType> label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
-            <Input />
-          </Form.Item>
-          <Form.Item<FieldType> label="Mobile" name="mobile" rules={[{ required: true, message: 'Please input your mobile!' }]}>
-            <Input />
-          </Form.Item>
+          <Row gutter={24}>
+            {Fields.map(i => {
+              return (
+                <Col span={12} key={i.name}>
+                  <Form.Item<FieldType>
+                    label={i.name}
+                    name={i.name}
+                    rules={[{ required: i.required, message: `Please input your ${i.name}!` }]}>
+                    <Input />
+                  </Form.Item>
+                </Col>
+              )
+            })}
+          </Row>
         </Form>
       </Modal>
     </>

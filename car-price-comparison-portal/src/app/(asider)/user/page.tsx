@@ -2,6 +2,7 @@
 import React, { useEffect, useState } from 'react'
 import { Form, Table, Button, Space, Input, InputNumber, Popconfirm, Typography } from 'antd'
 import type { GetProp, TableProps } from 'antd'
+import { ShowMessage } from '@/utility'
 import qs from 'qs'
 import { delUser, getUser, updateUser } from '@/api'
 import AddUserModal from './AddUserModal'
@@ -98,7 +99,7 @@ const User: React.FC = () => {
   }, [tableParams.pagination?.current, tableParams.pagination?.pageSize])
 
   function getData() {
-    const query = qs.stringify({ pageNumber: tableParams.pagination?.current, pageSize: tableParams.pagination?.pageSize })
+    const query = qs.stringify({ pageNumber: tableParams.pagination?.current, pageSize: tableParams.pagination?.pageSize, ...queryParams })
     setLoading(true)
     getUser(query).then(res => {
       setLoading(false)
@@ -121,10 +122,10 @@ const User: React.FC = () => {
   const save = async (key: string) => {
     try {
       const row = (await form.validateFields()) as Item
-      // await updateUser({
-      //   ...row,
-      //   userId: key,
-      // })
+      await updateUser({
+        ...row,
+        userId: key,
+      })
       setEditingKey('')
       getData()
     } catch (errInfo) {
@@ -132,8 +133,11 @@ const User: React.FC = () => {
     }
   }
   async function confirmDel(userId: string) {
-    await delUser(userId)
-    getData()
+    const res = await delUser(userId)
+    if (res.status === 200) {
+      ShowMessage.success('delete successfully!')
+      getData()
+    }
   }
   const columns = [
     {
@@ -190,8 +194,8 @@ const User: React.FC = () => {
             </Button>
 
             <Popconfirm
-              title="Delete the task"
-              description="Are you sure to delete this task?"
+              title="Delete the user"
+              description="Are you sure to delete this user?"
               onConfirm={() => confirmDel(record.key)}
               onCancel={cancel}
               okText="Yes"
@@ -230,14 +234,35 @@ const User: React.FC = () => {
       setData([])
     }
   }
+  const [queryParams, setQueryParams] = useState({ username: '', mobile: '' })
+  function changeField(k: string, v: string) {
+    setQueryParams({
+      ...queryParams,
+      [k]: v,
+    })
+  }
+
   return (
     <>
       <Space className="mb-10">
-        <Input placeholder="username" />
-        <Input placeholder="mobile" />
-        <Input placeholder="dealer id" />
-        <Button type="primary"> Search</Button>
-        <Button onClick={showModal}>ADD USER</Button>
+        <Input
+          placeholder="username"
+          onChange={e => {
+            changeField('username', e.target.value)
+          }}
+          allowClear
+        />
+        <Input
+          placeholder="mobile"
+          onChange={e => {
+            changeField('mobile', e.target.value)
+          }}
+          allowClear
+        />
+        <Button type="primary" onClick={getData}>
+          Search
+        </Button>
+        <Button onClick={showModal}>Add user</Button>
       </Space>
       {/* <Table style={{ marginTop: '20px' }} columns={columns} dataSource={data} /> */}
       <Form form={form} component={false}>

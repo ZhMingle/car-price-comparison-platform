@@ -18,8 +18,10 @@ export interface DealerItem {
 import React, { useState, useEffect } from 'react'
 import type { TableProps } from 'antd'
 import { Button, Form, Input, InputNumber, Popconfirm, Space, Table, Typography } from 'antd'
-import { filterDealer, getDealer } from '@/api'
-import AddDealerModal from './AddDealer'
+import qs from 'qs'
+import { delDealer, filterDealer, getDealer } from '@/api'
+import AddDealerModal from './AddDealerModal'
+import { ShowMessage } from '@/utility'
 
 interface Item {
   key: string
@@ -85,7 +87,11 @@ const App: React.FC = () => {
   const [data, setData] = useState(originData)
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [editingKey, setEditingKey] = useState('')
-
+  const [loading, setLoading] = useState(false)
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  })
   const isEditing = (record: Item) => record.key === editingKey
 
   const edit = (record: Partial<Item> & { key: React.Key }) => {
@@ -97,12 +103,22 @@ const App: React.FC = () => {
     setEditingKey('')
   }
   useEffect(() => {
-    getDealer().then(res => {
-      if (res.data.dealers) {
-        setData(res.data.dealers.map(i => ({ ...(i as object), key: i.dealerId })) as any)
-      }
-    })
-  }, [])
+    getData()
+  }, [pagination.current, pagination.pageSize])
+
+  async function getData() {
+    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize })
+    setLoading(true)
+    const res = await getDealer(query)
+    setLoading(false)
+    if (Array.isArray(res.data.dealers)) {
+      setData(res.data.dealers.map(i => ({ ...(i as object), key: i.dealerId })) as any)
+      setPagination({
+        ...pagination,
+        total: res.data.total,
+      })
+    }
+  }
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as Item
@@ -111,53 +127,23 @@ const App: React.FC = () => {
       console.error('Validate Failed:', errInfo)
     }
   }
-
+  async function confirmDel(dealerId: string) {
+    const res = await delDealer(dealerId)
+    if (res.status === 200) {
+      ShowMessage.success('delete successfully!')
+      getData()
+    }
+  }
   const columns = [
-    {
-      title: 'dealer id',
-      dataIndex: 'dealerId',
-      editable: true,
-    },
-    {
-      title: 'name',
-      dataIndex: 'name',
-      editable: true,
-    },
-    {
-      title: 'address',
-      dataIndex: 'address',
-      editable: true,
-    },
-    {
-      title: 'city',
-      dataIndex: 'city',
-      editable: true,
-    },
-    {
-      title: 'state',
-      dataIndex: 'state',
-      editable: true,
-    },
-    {
-      title: 'zipCode',
-      dataIndex: 'zipCode',
-      editable: true,
-    },
-    {
-      title: 'country',
-      dataIndex: 'country',
-      editable: true,
-    },
-    {
-      title: 'phone',
-      dataIndex: 'phone',
-      editable: true,
-    },
-    {
-      title: 'email',
-      dataIndex: 'email',
-      editable: true,
-    },
+    { title: 'dealer id', dataIndex: 'dealerId', editable: true },
+    { title: 'name', dataIndex: 'name', editable: true },
+    { title: 'address', dataIndex: 'address', editable: true },
+    { title: 'city', dataIndex: 'city', editable: true },
+    { title: 'state', dataIndex: 'state', editable: true },
+    { title: 'zipCode', dataIndex: 'zipCode', editable: true },
+    { title: 'country', dataIndex: 'country', editable: true },
+    { title: 'phone', dataIndex: 'phone', editable: true },
+    { title: 'email', dataIndex: 'email', editable: true },
     {
       title: 'website',
       dataIndex: 'website',
@@ -168,24 +154,13 @@ const App: React.FC = () => {
       ),
       editable: true,
     },
-    {
-      title: 'status',
-      dataIndex: 'status',
-      editable: true,
-    },
-    {
-      title: 'createTime',
-      dataIndex: 'createTime',
-      editable: true,
-    },
-    {
-      title: 'updateTime',
-      dataIndex: 'updateTime',
-      editable: true,
-    },
+    { title: 'status', dataIndex: 'status', editable: true },
+    { title: 'createTime', dataIndex: 'createTime', editable: true },
+    { title: 'updateTime', dataIndex: 'updateTime', editable: true },
     {
       title: 'operation',
       dataIndex: 'operation',
+      fixed: 'right',
       render: (_: any, record: Item) => {
         const editable = isEditing(record)
         return editable ? (
@@ -193,14 +168,24 @@ const App: React.FC = () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
+            <a onClick={cancel}>Cancel</a>
           </span>
         ) : (
-          <Typography.Link disabled={editingKey !== ''} onClick={() => edit(record)}>
-            Edit
-          </Typography.Link>
+          <Space>
+            <Button disabled={editingKey !== ''} onClick={() => edit(record)}>
+              Edit
+            </Button>
+
+            <Popconfirm
+              title="Delete the user"
+              description="Are you sure to delete this user?"
+              onConfirm={() => confirmDel(record.key)}
+              onCancel={cancel}
+              okText="Yes"
+              cancelText="No">
+              <Button danger>Delete</Button>
+            </Popconfirm>
+          </Space>
         )
       },
     },
@@ -227,6 +212,9 @@ const App: React.FC = () => {
       res.data && setData([res.data].map(i => ({ ...(i as object), key: i.dealerId })) as any)
     }
   }
+  function handleTableChange(_pagination: any) {
+    setPagination(_pagination)
+  }
   return (
     <>
       <Space className="mb-10">
@@ -242,7 +230,7 @@ const App: React.FC = () => {
           onClick={() => {
             setIsModalOpen(true)
           }}>
-          Add a new dealer{' '}
+          Add dealer{' '}
         </Button>
       </Space>
       <Form form={form} component={false}>
@@ -257,9 +245,15 @@ const App: React.FC = () => {
           columns={mergedColumns}
           rowClassName="editable-row"
           pagination={{
+            ...pagination,
             onChange: cancel,
+            pageSizeOptions: [10, 20, 30, 50],
+            showSizeChanger: true,
+            showTotal: v => `Total ${v} item`,
           }}
+          loading={loading}
           scroll={{ x: 'max-content' }}
+          onChange={handleTableChange}
           size="small"
         />
       </Form>

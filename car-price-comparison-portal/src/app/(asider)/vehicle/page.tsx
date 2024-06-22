@@ -4,9 +4,11 @@ import { Button, Space, Form, Input, InputNumber, Popconfirm, Table, Typography 
 import type { TableProps } from 'antd'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 import qs from 'qs'
-import { delVehicle, getVehicle } from '@/api'
+import { delVehicle, getVehicle, updateVehicle } from '@/api'
+import AddVehicleModal from './AddVehicleModal'
+import { ShowMessage } from '@/utility'
 
-interface Item {
+export interface VehicleItem {
   key: string
   vehicleId: string
   brand: string
@@ -28,14 +30,14 @@ interface Item {
   updateTime: string
 }
 
-const originData: Item[] = []
+const originData: VehicleItem[] = []
 
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean
   dataIndex: string
   title: any
   inputType: 'number' | 'text'
-  record: Item
+  record: VehicleItem
   index: number
 }
 
@@ -72,20 +74,19 @@ const EditableCell: React.FC<React.PropsWithChildren<EditableCellProps>> = ({
   )
 }
 
-const images = ['https://cdn.motor1.com/images/mgl/MkO9NN/s1/future-supercars.webp']
-
 const Vehicle: React.FC = () => {
   const [form] = Form.useForm()
   const [data, setData] = useState(originData)
   const [editingKey, setEditingKey] = useState('')
   const [loading, setLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 10,
   })
-  const isEditing = (record: Item) => record.key === editingKey
+  const isEditing = (record: VehicleItem) => record.key === editingKey
 
-  const edit = (record: Partial<Item> & { key: React.Key }) => {
+  const edit = (record: Partial<VehicleItem> & { key: React.Key }) => {
     form.setFieldsValue({ name: '', age: '', address: '', ...record })
     setEditingKey(record.key)
   }
@@ -94,11 +95,18 @@ const Vehicle: React.FC = () => {
     setEditingKey('')
   }
 
-  const save = async (key: React.Key) => {
+  const save = async (key: string) => {
     try {
-      const row = (await form.validateFields()) as Item
-
+      const row = (await form.validateFields()) as VehicleItem
+      const res = await updateVehicle({
+        ...row,
+        vehicleId: key,
+      })
+      if (res.status === 200) {
+        ShowMessage.success('edit successfully')
+      }
       setEditingKey('')
+      getData()
     } catch (errInfo) {
       console.log('Validate Failed:', errInfo)
     }
@@ -108,7 +116,7 @@ const Vehicle: React.FC = () => {
     {
       title: 'vehicleId',
       dataIndex: 'vehicleId',
-      editable: true,
+      editable: false,
       fixed: 'left',
     },
     {
@@ -209,7 +217,7 @@ const Vehicle: React.FC = () => {
       title: 'operation',
       dataIndex: 'operation',
       fixed: 'right',
-      render: (_: any, record: Item) => {
+      render: (_: any, record: VehicleItem) => {
         const editable = isEditing(record)
         return editable ? (
           <span>
@@ -245,7 +253,7 @@ const Vehicle: React.FC = () => {
     }
     return {
       ...col,
-      onCell: (record: Item) => ({
+      onCell: (record: VehicleItem) => ({
         record,
         inputType: 'text',
         dataIndex: col.dataIndex,
@@ -263,15 +271,19 @@ const Vehicle: React.FC = () => {
     const res = await getVehicle(query)
     setLoading(false)
     if (Array.isArray(res.data.vehicles)) {
-      setData(res.data.vehicles as any)
+      setData(res.data.vehicles.map(i => ({ ...(i as object), key: i.vehicleId })) as any)
       setPagination({
         ...pagination,
         total: res.data.total,
       })
     }
   }
-  function confirmDel(vehicleId) {
-    delVehicle(vehicleId)
+  async function confirmDel(vehicleId: sring) {
+    const res = await delVehicle(vehicleId)
+    if (res.status === 200) {
+      ShowMessage.success('delete successfully!')
+      getData()
+    }
   }
   function handleTableChange(_pagination: any) {
     setPagination(_pagination)
@@ -283,7 +295,12 @@ const Vehicle: React.FC = () => {
         <Input placeholder="model" />
         <Input placeholder="year" />
         <Button type="primary"> Search</Button>
-        <Button type="primary">Add Vehicle</Button>
+        <Button
+          onClick={() => {
+            setIsModalOpen(true)
+          }}>
+          Add Vehicle
+        </Button>
       </Space>
 
       <Form form={form} component={false}>
@@ -310,6 +327,7 @@ const Vehicle: React.FC = () => {
           size="small"
         />
       </Form>
+      <AddVehicleModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </>
   )
 }
