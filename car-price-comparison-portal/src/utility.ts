@@ -13,19 +13,19 @@ export class ShowMessage {
     this.message('info', options, ss)
   }
 
-  static error(options, ss = 2) {
+  static error(options: any, ss = 2) {
     this.message('error', options, ss)
   }
 
-  static message(type, options, ss = 2) {
+  static message(type: any, options: any, ss = 2) {
     const messageDom = document.getElementsByClassName('ant-message')[0]
     // console.log(messageDom,'a');
     if (messageDom === undefined) {
-      message[type](options, ss)
+      ;(message as any)[type](options, ss)
     } else {
       // message.closeAll()
-      message.destroy()
-      message[type](options, ss)
+      ;(message as any).destroy()
+      ;(message as any)[type](options, ss)
     }
   }
 }

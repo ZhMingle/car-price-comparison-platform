@@ -80,7 +80,7 @@ const Vehicle: React.FC = () => {
   const [editingKey, setEditingKey] = useState('')
   const [loading, setLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
-  const [pagination, setPagination] = useState({
+  const [pagination, setPagination] = useState<any>({
     current: 1,
     pageSize: 10,
   })
@@ -188,10 +188,10 @@ const Vehicle: React.FC = () => {
       title: 'listingUrl',
       dataIndex: 'listingUrl',
       fixed: 'right',
-      render: t => (
+      render: (t: any) => (
         <PhotoProvider>
           <Space className="w-200">
-            {t.split(',').map((item, index) => (
+            {t.split(',').map((item: string, index: string) => (
               <PhotoView key={index} src={item}>
                 <img src={item} alt="" className="cursor-pointer" />
               </PhotoView>
@@ -247,7 +247,7 @@ const Vehicle: React.FC = () => {
       },
     },
   ]
-  const mergedColumns: TableProps['columns'] = columns.map(col => {
+  const mergedColumns = columns.map(col => {
     if (!col.editable) {
       return col
     }
@@ -271,14 +271,14 @@ const Vehicle: React.FC = () => {
     const res = await getVehicle(query)
     setLoading(false)
     if (Array.isArray(res.data.vehicles)) {
-      setData(res.data.vehicles.map(i => ({ ...(i as object), key: i.vehicleId })) as any)
+      setData(res.data.vehicles.map((i: any) => ({ ...(i as object), key: i.vehicleId })) as any)
       setPagination({
         ...pagination,
         total: res.data.total,
       })
     }
   }
-  async function confirmDel(vehicleId: sring) {
+  async function confirmDel(vehicleId: string) {
     const res = await delVehicle(vehicleId)
     if (res.status === 200) {
       ShowMessage.success('delete successfully!')
@@ -312,7 +312,7 @@ const Vehicle: React.FC = () => {
           }}
           bordered
           dataSource={data}
-          columns={mergedColumns}
+          columns={mergedColumns as any}
           rowClassName="editable-row"
           pagination={{
             ...pagination,
