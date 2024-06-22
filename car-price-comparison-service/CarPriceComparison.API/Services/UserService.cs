@@ -23,7 +23,6 @@ public class UserService : IUserService
     public UserList GetAll(String? username, String? mobile, int pageNumber, int pageSize)
     {
         var query = _context.Users.AsQueryable();
-        query = query.Where(u => u.Status == Constants.UserStatus.Normal);
         
         if (!string.IsNullOrEmpty(username))
         {
@@ -48,7 +47,7 @@ public class UserService : IUserService
 
     public User GetById(long userId)
     {
-        return _context.Users.Where(u => u.UserId == userId && u.Status == Constants.UserStatus.Normal)
+        return _context.Users.Where(u => u.UserId == userId)
             .FirstOrDefault();
     }
 

@@ -23,7 +23,6 @@ public class DealerService : IDealerService
     public DealerList GetAll(String? name, int pageNumber, int pageSize)
     {
         var query = _context.Dealers.AsQueryable();
-        query = query.Where(d =>d.Status == Constants.DealerStatus.Normal);
         
         if (!string.IsNullOrEmpty(name))
         {
@@ -42,7 +41,7 @@ public class DealerService : IDealerService
 
     public Dealer GetById(long dealerId)
     {
-        return _context.Dealers.Where(d => d.DealerId == dealerId && d.Status == Constants.DealerStatus.Normal)
+        return _context.Dealers.Where(d => d.DealerId == dealerId)
             .FirstOrDefault();
     }
 

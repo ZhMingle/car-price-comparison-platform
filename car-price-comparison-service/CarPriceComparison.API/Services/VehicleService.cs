@@ -24,7 +24,6 @@ public class VehicleService : IVehicleService
     public VehicleList GetAll(string? brand, string? model, int? year, int pageNumber, int pageSize)
     {
         var query = _context.Vehicles.AsQueryable();
-        query = query.Where(d =>d.Status == Constants.VehicleStatus.Normal);
         
         if (!string.IsNullOrEmpty(brand))
         {
@@ -54,7 +53,7 @@ public class VehicleService : IVehicleService
     public Vehicle GetById(long vehicleId)
     {
         return _context.Vehicles
-            .Where(v => v.VehicleId == vehicleId && v.Status == Constants.VehicleStatus.Normal)
+            .Where(v => v.VehicleId == vehicleId)
             .FirstOrDefault();
     }
 
