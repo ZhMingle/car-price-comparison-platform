@@ -5,8 +5,8 @@ import type { TableProps } from 'antd'
 import { PhotoProvider, PhotoView } from 'react-photo-view'
 import qs from 'qs'
 import { delVehicle, getVehicle, updateVehicle } from '@/api'
-import AddVehicleModal from './AddVehicleModal'
 import { ShowMessage } from '@/utility'
+import { debounce } from 'lodash'
 
 export interface VehicleItem {
   key: string
@@ -79,7 +79,6 @@ const Vehicle: React.FC = () => {
   const [data, setData] = useState(originData)
   const [editingKey, setEditingKey] = useState('')
   const [loading, setLoading] = useState(false)
-  const [isModalOpen, setIsModalOpen] = useState(false)
   const [pagination, setPagination] = useState<any>({
     current: 1,
     pageSize: 10,
@@ -224,9 +223,7 @@ const Vehicle: React.FC = () => {
             <Typography.Link onClick={() => save(record.key)} style={{ marginRight: 8 }}>
               Save
             </Typography.Link>
-            <Popconfirm title="Sure to cancel?" onConfirm={cancel}>
-              <a>Cancel</a>
-            </Popconfirm>
+            <a onClick={cancel}>Cancel</a>
           </span>
         ) : (
           <Space>
@@ -266,7 +263,7 @@ const Vehicle: React.FC = () => {
     getData()
   }, [pagination.current, pagination.pageSize])
   async function getData() {
-    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize })
+    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize, ...queryParams })
     setLoading(true)
     const res = await getVehicle(query)
     setLoading(false)
@@ -288,18 +285,44 @@ const Vehicle: React.FC = () => {
   function handleTableChange(_pagination: any) {
     setPagination(_pagination)
   }
+  const onSearch = debounce(function () {
+    if (pagination.current === 1) {
+      getData()
+    } else {
+      setPagination({
+        ...pagination,
+        current: 1,
+      })
+    }
+  }, 300)
+  const [queryParams, setQueryParams] = useState({ brand: '', model: '', year: '' })
   return (
     <>
       <Space className="mb-10">
-        <Input placeholder="brand" />
-        <Input placeholder="model" />
-        <Input placeholder="year" />
-        <Button type="primary"> Search</Button>
-        <Button
-          onClick={() => {
-            setIsModalOpen(true)
-          }}>
-          Add Vehicle
+        <Input
+          placeholder="brand"
+          allowClear
+          onChange={e => {
+            setQueryParams({ ...queryParams, brand: e.target.value })
+          }}
+        />
+        <Input
+          placeholder="model"
+          allowClear
+          onChange={e => {
+            setQueryParams({ ...queryParams, model: e.target.value })
+          }}
+        />
+        <Input
+          placeholder="year"
+          allowClear
+          onChange={e => {
+            setQueryParams({ ...queryParams, year: e.target.value })
+          }}
+        />
+        <Button type="primary" onClick={onSearch}>
+          {' '}
+          Search
         </Button>
       </Space>
 
@@ -327,7 +350,6 @@ const Vehicle: React.FC = () => {
           size="small"
         />
       </Form>
-      <AddVehicleModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
     </>
   )
 }

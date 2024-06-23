@@ -16,25 +16,21 @@ export default function Login() {
   const { token } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const router = useRouter()
-  const onFinish = debounce(
-    async function (value: any) {
-      if (isLogin) {
-        const { data, status } = await login({ ...value })
-        data?.token && dispatch(setToken(data.token))
-        if (status === 200) {
-          router.push('/vehicle')
-        }
-      } else {
-        const res = await register(pick(value, ['username', 'password', 'email', 'mobile']))
-        if (res.status === 200) {
-          ShowMessage.success('Register successfully')
-          setIsLogin(true)
-        }
+  const onFinish = debounce(async function (value: any) {
+    if (isLogin) {
+      const { data, status } = await login({ ...value })
+      data?.token && dispatch(setToken(data.token))
+      if (status === 200) {
+        // router.push('/vehicle')
       }
-    },
-    1000,
-    { leading: true },
-  )
+    } else {
+      const res = await register({ ...pick(value, ['username', 'password', 'email', 'mobile']), status: 0 })
+      if (res.status === 200) {
+        ShowMessage.success('Register successfully')
+        setIsLogin(true)
+      }
+    }
+  }, 300)
   function toggleLogin() {
     setIsLogin(!isLogin)
   }

@@ -120,17 +120,16 @@ const User: React.FC = () => {
     setIsModalOpen(true)
   }
   const save = async (key: string) => {
-    try {
-      const row = (await form.validateFields()) as Item
-      await updateUser({
-        ...row,
-        userId: key,
-      })
-      setEditingKey('')
-      getData()
-    } catch (errInfo) {
-      console.log('Validate Failed:', errInfo)
+    const row = (await form.validateFields()) as Item
+    const res = await updateUser({
+      ...row,
+      userId: key,
+    })
+    if (res.status === 200) {
+      ShowMessage.success('Update successfully')
     }
+    setEditingKey('')
+    getData()
   }
   async function confirmDel(userId: string) {
     const res = await delUser(userId)
@@ -173,6 +172,11 @@ const User: React.FC = () => {
       title: 'updateTime',
       dataIndex: 'updateTime',
       key: 'updateTime',
+    },
+    {
+      title: 'status',
+      dataIndex: 'status',
+      key: 'status',
     },
     {
       title: 'operation',
@@ -241,14 +245,18 @@ const User: React.FC = () => {
       [k]: v,
     })
   }
+
   function search() {
-    setTableParams({
-      pagination: {
-        ...tableParams.pagination,
-        current: 1,
-      },
-    })
-    getData()
+    if (tableParams.pagination?.current === 1) {
+      getData()
+    } else {
+      setTableParams({
+        pagination: {
+          ...tableParams.pagination,
+          current: 1,
+        },
+      })
+    }
   }
   return (
     <>

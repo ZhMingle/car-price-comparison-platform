@@ -19,11 +19,9 @@ export class ShowMessage {
 
   static message(type: any, options: any, ss = 2) {
     const messageDom = document.getElementsByClassName('ant-message')[0]
-    // console.log(messageDom,'a');
     if (messageDom === undefined) {
       ;(message as any)[type](options, ss)
     } else {
-      // message.closeAll()
       ;(message as any).destroy()
       ;(message as any)[type](options, ss)
     }

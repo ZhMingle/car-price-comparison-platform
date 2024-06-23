@@ -1,5 +1,5 @@
 // 'use client'
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { Modal, Form, Input, Button } from 'antd'
 import type { FormProps } from 'antd'
 import { addUser } from '@/api'
@@ -22,16 +22,15 @@ export default function ({ isModalOpen, setIsModalOpen, $getData }: any) {
     setIsModalOpen(false)
   }
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {
-    console.log(values)
-
     const res = await addUser({
       ...values,
       status: 0, // default status: 0
     })
     if (res.status === 200) {
-      ShowMessage.success('Successfully addition')
+      ShowMessage.success('Add Successfully')
     }
     setIsModalOpen(false)
+    formRef.current.resetFields()
     $getData()
   }
 
