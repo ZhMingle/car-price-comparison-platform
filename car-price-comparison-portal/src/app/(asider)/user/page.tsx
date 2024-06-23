@@ -241,7 +241,15 @@ const User: React.FC = () => {
       [k]: v,
     })
   }
-
+  function search() {
+    setTableParams({
+      pagination: {
+        ...tableParams.pagination,
+        current: 1,
+      },
+    })
+    getData()
+  }
   return (
     <>
       <Space className="mb-10">
@@ -259,7 +267,7 @@ const User: React.FC = () => {
           }}
           allowClear
         />
-        <Button type="primary" onClick={getData}>
+        <Button type="primary" onClick={search}>
           Search
         </Button>
         <Button onClick={showModal}>Add user</Button>
