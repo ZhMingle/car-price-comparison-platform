@@ -21,7 +21,7 @@ export default function Login() {
       const { data, status } = await login({ ...value })
       data?.token && dispatch(setToken(data.token))
       if (status === 200) {
-        // router.push('/vehicle')
+        router.push('/vehicle')
       }
     } else {
       const res = await register({ ...pick(value, ['username', 'password', 'email', 'mobile']), status: 0 })
