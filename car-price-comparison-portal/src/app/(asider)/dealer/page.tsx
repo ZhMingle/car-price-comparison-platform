@@ -19,7 +19,7 @@ import React, { useState, useEffect } from 'react'
 import type { TableProps } from 'antd'
 import { Button, Form, Input, InputNumber, Popconfirm, Space, Table, Typography } from 'antd'
 import qs from 'qs'
-import { delDealer, filterDealer, getDealer } from '@/api'
+import { delDealer, getDealer, updateDealer } from '@/api'
 import AddDealerModal from './AddDealerModal'
 import { ShowMessage } from '@/utility'
 
@@ -31,14 +31,7 @@ interface Item {
 }
 
 const originData: Item[] = []
-for (let i = 0; i < 100; i++) {
-  originData.push({
-    key: i.toString(),
-    name: `Edward ${i}`,
-    age: 32,
-    address: `London Park no. ${i}`,
-  })
-}
+
 interface EditableCellProps extends React.HTMLAttributes<HTMLElement> {
   editing: boolean
   dataIndex: string
@@ -107,7 +100,7 @@ const App: React.FC = () => {
   }, [pagination.current, pagination.pageSize])
 
   async function getData() {
-    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize })
+    const query = qs.stringify({ pageNumber: pagination?.current, pageSize: pagination?.pageSize, ...queryParams })
     setLoading(true)
     const res = await getDealer(query)
     setLoading(false)
@@ -122,7 +115,15 @@ const App: React.FC = () => {
   const save = async (key: React.Key) => {
     try {
       const row = (await form.validateFields()) as Item
+      const res = await updateDealer({
+        ...row,
+        dealerId: key,
+      } as any)
+      if (res.status === 200) {
+        ShowMessage.success('Update successfully!')
+      }
       setEditingKey('')
+      getData()
     } catch (errInfo) {
       console.error('Validate Failed:', errInfo)
     }
@@ -135,7 +136,7 @@ const App: React.FC = () => {
     }
   }
   const columns = [
-    { title: 'dealer id', dataIndex: 'dealerId', editable: true },
+    { title: 'dealer id', dataIndex: 'dealerId', editable: false },
     { title: 'name', dataIndex: 'name', editable: true },
     { title: 'address', dataIndex: 'address', editable: true },
     { title: 'city', dataIndex: 'city', editable: true },
@@ -155,8 +156,8 @@ const App: React.FC = () => {
       editable: true,
     },
     { title: 'status', dataIndex: 'status', editable: true },
-    { title: 'createTime', dataIndex: 'createTime', editable: true },
-    { title: 'updateTime', dataIndex: 'updateTime', editable: true },
+    { title: 'createTime', dataIndex: 'createTime', editable: false },
+    { title: 'updateTime', dataIndex: 'updateTime', editable: false },
     {
       title: 'operation',
       dataIndex: 'operation',
@@ -206,10 +207,14 @@ const App: React.FC = () => {
       }),
     }
   })
-  async function onSearch(id: string) {
-    if (id) {
-      const res = await filterDealer(id)
-      res.data && setData([res.data].map(i => ({ ...(i as object), key: i.dealerId })) as any)
+  async function onSearch() {
+    if (pagination.current === 1) {
+      getData()
+    } else {
+      setPagination({
+        ...pagination,
+        current: 1,
+      })
     }
   }
   function handleTableChange(_pagination: any) {
@@ -220,12 +225,14 @@ const App: React.FC = () => {
       <Space className="mb-10">
         <Input
           placeholder="dealer name"
+          allowClear
           onChange={e => {
             setQueryParams({ ...queryParams, name: e.target.value })
           }}
         />
-        <Input placeholder="dealer id" />
-        <Button type="primary">Search</Button>
+        <Button type="primary" onClick={onSearch}>
+          Search
+        </Button>
         <Button
           onClick={() => {
             setIsModalOpen(true)
@@ -257,7 +264,7 @@ const App: React.FC = () => {
           size="small"
         />
       </Form>
-      <AddDealerModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} />
+      <AddDealerModal isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} $getData={getData} />
     </>
   )
 }

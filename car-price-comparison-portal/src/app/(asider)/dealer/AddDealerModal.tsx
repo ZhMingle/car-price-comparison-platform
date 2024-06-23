@@ -2,7 +2,7 @@
 import { useState, useRef } from 'react'
 import { Modal, Form, Input, Button, Col, Row } from 'antd'
 import type { FormProps } from 'antd'
-import { addUser } from '@/api'
+import { addDealer, addUser } from '@/api'
 import { ShowMessage } from '@/utility'
 import { DealerItem } from './page'
 
@@ -25,16 +25,16 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {
     console.log(values)
 
-    const res = await addUser({
+    const res = await addDealer({
       ...values,
       status: 0, // default status: 0
     })
 
-    // if (res.status === 200) {
-    //   ShowMessage.success('Successfully addition')
-    // }
-    // setIsModalOpen(false)
-    // $getData()
+    if (res.status === 200) {
+      ShowMessage.success('Add successfully')
+    }
+    setIsModalOpen(false)
+    $getData()
   }
 
   const onFinishFailed: FormProps<FieldType>['onFinishFailed'] = errorInfo => {
@@ -61,7 +61,6 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
     { name: 'email', required: true },
     { name: 'website', required: true },
     { name: 'status', required: true },
-    { name: 'address', required: true },
   ]
   return (
     <>

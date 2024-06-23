@@ -1,9 +1,15 @@
 'use client'
-export default function Home() {
-  return (
-    <main>
-      <header className="flex p-20"></header>
-      <div>car-list</div>
-    </main>
-  )
+// The entry of the app
+
+import { useEffect } from 'react'
+import { redirect } from 'next/navigation'
+
+export default function App() {
+  useEffect(() => {
+    if (localStorage.getItem('token')) {
+      redirect('/vehicle')
+    } else {
+      redirect('/login')
+    }
+  }, [])
 }

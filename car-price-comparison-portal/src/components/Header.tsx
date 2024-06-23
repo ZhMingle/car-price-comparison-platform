@@ -8,6 +8,7 @@ export default function Header() {
       <Button
         type="text"
         onClick={() => {
+          localStorage.removeItem('token')
           router.push('/login')
         }}>
         Quit
