@@ -1,5 +1,5 @@
 'use client'
-import { Button, Input, Space, Form, Select } from 'antd'
+import { Button, Input, Space, Form } from 'antd'
 import { UserOutlined, LockOutlined } from '@ant-design/icons'
 import { login, register } from '@/api'
 import { useRef, useState } from 'react'
@@ -16,15 +16,19 @@ export default function Login() {
   const { token } = useSelector((state: RootState) => state.user)
   const dispatch = useDispatch()
   const router = useRouter()
+  const [loading, setLoading] = useState(false)
   const onFinish = debounce(async function (value: any) {
+    setLoading(true)
     if (isLogin) {
       const { data, status } = await login({ ...value })
+      setLoading(false)
       data?.token && dispatch(setToken(data.token))
       if (status === 200) {
         router.push('/vehicle')
       }
     } else {
       const res = await register({ ...pick(value, ['username', 'password', 'email', 'mobile']), status: 0 })
+      setLoading(false)
       if (res.status === 200) {
         ShowMessage.success('Register successfully')
         setIsLogin(true)
@@ -35,15 +39,6 @@ export default function Login() {
     setIsLogin(!isLogin)
   }
 
-  const { Option } = Select
-  const prefixSelector = (
-    <Form.Item name="prefix" noStyle>
-      <Select className="w-72">
-        <Option value="64">+64</Option>
-        <Option value="61">+61</Option>
-      </Select>
-    </Form.Item>
-  )
   return (
     <div className="w-screen h-screen flex justify-center items-center bg-slate-200">
       <div className="w-570 p-40 pr-60 bg-white rounded">
@@ -57,10 +52,10 @@ export default function Login() {
           onFinish={onFinish}
           size="large">
           <Form.Item name="username" label="Username" rules={[{ required: true, message: 'Please input your Username!' }]}>
-            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" />
+            <Input prefix={<UserOutlined className="site-form-item-icon" />} placeholder="Username" allowClear />
           </Form.Item>
           <Form.Item name="password" label="Password" rules={[{ required: true, message: 'Please input your Password!' }]}>
-            <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Password" />
+            <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Password" allowClear />
           </Form.Item>
           {!isLogin && (
             <>
@@ -82,7 +77,12 @@ export default function Login() {
                     },
                   }),
                 ]}>
-                <Input prefix={<LockOutlined className="site-form-item-icon" />} type="password" placeholder="Confirm Password" />
+                <Input
+                  prefix={<LockOutlined className="site-form-item-icon" />}
+                  type="password"
+                  placeholder="Confirm Password"
+                  allowClear
+                />
               </Form.Item>
               <Form.Item
                 name="email"
@@ -97,15 +97,15 @@ export default function Login() {
                     message: 'Please input your E-mail!',
                   },
                 ]}>
-                <Input />
+                <Input allowClear />
               </Form.Item>
               <Form.Item name="mobile" label="Phone" rules={[{ required: true, message: 'Please input your phone number!' }]}>
-                <Input addonBefore={prefixSelector} style={{ width: '100%' }} />
+                <Input style={{ width: '100%' }} allowClear />
               </Form.Item>
             </>
           )}
           <Form.Item wrapperCol={{ span: 24 }} colon={false}>
-            <Button type="primary" htmlType="submit" className="mb-10" block>
+            <Button type="primary" htmlType="submit" className="mb-10" block loading={loading}>
               {isLogin ? 'Log in' : 'Register'}
             </Button>
             <Button type="text" block onClick={() => toggleLogin()}>

@@ -7,6 +7,7 @@ import qs from 'qs'
 import { delVehicle, getVehicle, updateVehicle } from '@/api'
 import { ShowMessage } from '@/utility'
 import { debounce } from 'lodash'
+import { STATUS } from '@/const'
 
 export interface VehicleItem {
   key: string
@@ -171,7 +172,7 @@ const Vehicle: React.FC = () => {
     {
       title: 'status',
       dataIndex: 'status',
-      editable: true,
+      render: (t: number) => <span>{STATUS[t]}</span>,
     },
     {
       title: 'source',
@@ -296,12 +297,18 @@ const Vehicle: React.FC = () => {
     }
   }, 300)
   const [queryParams, setQueryParams] = useState({ brand: '', model: '', year: '' })
+  const enterTriger = debounce(function (e: any) {
+    if (e.key === 'Enter') {
+      onSearch()
+    }
+  }, 200)
   return (
     <>
       <Space className="mb-10">
         <Input
           placeholder="brand"
           allowClear
+          onKeyDown={enterTriger}
           onChange={e => {
             setQueryParams({ ...queryParams, brand: e.target.value })
           }}
@@ -309,6 +316,7 @@ const Vehicle: React.FC = () => {
         <Input
           placeholder="model"
           allowClear
+          onKeyDown={enterTriger}
           onChange={e => {
             setQueryParams({ ...queryParams, model: e.target.value })
           }}
@@ -316,12 +324,12 @@ const Vehicle: React.FC = () => {
         <Input
           placeholder="year"
           allowClear
+          onKeyDown={enterTriger}
           onChange={e => {
             setQueryParams({ ...queryParams, year: e.target.value })
           }}
         />
-        <Button type="primary" onClick={onSearch}>
-          {' '}
+        <Button type="primary" onClick={onSearch} loading={loading}>
           Search
         </Button>
       </Space>
