@@ -122,15 +122,19 @@ app.UseSwaggerUI(c =>
     c.SwaggerEndpoint("/swagger/v1/swagger.json", "CarPriceComparison API V1");
 });
 
-// 使用 CORS 策略
-app.UseCors("AllowSpecificOrigin");
-
 app.UseRouting();
 
+// 使用CORS策略
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllers();
+});
 
 app.UseAuthentication();
 
