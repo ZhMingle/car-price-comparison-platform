@@ -54,8 +54,18 @@ builder.Services.AddAuthentication(options =>
 // Add auth
 builder.Services.AddAuthorization();
 
-// Allow cors
-builder.Services.AddCors(c => c.AddPolicy("any", p => p.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin()));
+// Allow CORS
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowSpecificOrigin",
+        builder =>
+        {
+            builder.WithOrigins("http://your-frontend-domain.com")
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .AllowCredentials();
+        });
+});
 
 // Add EF Core and MySQL configuration
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
@@ -114,7 +124,8 @@ app.UseSwaggerUI(c =>
 
 app.UseRouting();
 
-app.UseCors();
+// 使用 CORS 策略
+app.UseCors("AllowSpecificOrigin");
 
 app.UseHttpsRedirection();
 
