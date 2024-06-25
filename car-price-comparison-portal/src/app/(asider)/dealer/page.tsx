@@ -22,6 +22,8 @@ import qs from 'qs'
 import { delDealer, getDealer, updateDealer } from '@/api'
 import AddDealerModal from './AddDealerModal'
 import { ShowMessage } from '@/utility'
+import { STATUS } from '@/const'
+import { debounce } from 'lodash'
 
 interface Item {
   key: string
@@ -155,7 +157,7 @@ const App: React.FC = () => {
       ),
       editable: true,
     },
-    { title: 'status', dataIndex: 'status', editable: true },
+    { title: 'status', dataIndex: 'status', render: (t: number) => <span>{STATUS[t]}</span> },
     { title: 'createTime', dataIndex: 'createTime', editable: false },
     { title: 'updateTime', dataIndex: 'updateTime', editable: false },
     {
@@ -220,17 +222,23 @@ const App: React.FC = () => {
   function handleTableChange(_pagination: any) {
     setPagination(_pagination)
   }
+  const enterTriger = debounce(function (e: any) {
+    if (e.key === 'Enter') {
+      onSearch()
+    }
+  }, 200)
   return (
     <>
       <Space className="mb-10">
         <Input
           placeholder="dealer name"
           allowClear
+          onKeyDown={enterTriger}
           onChange={e => {
             setQueryParams({ ...queryParams, name: e.target.value })
           }}
         />
-        <Button type="primary" onClick={onSearch}>
+        <Button type="primary" loading={loading} onClick={onSearch}>
           Search
         </Button>
         <Button
