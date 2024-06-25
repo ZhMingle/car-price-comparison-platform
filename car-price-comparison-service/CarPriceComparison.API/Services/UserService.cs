@@ -37,7 +37,7 @@ public class UserService : IUserService
         
         var totalRecords = query.Count();
         var users = query
-            .OrderBy(u => u.UserId)
+            .OrderByDescending(u => u.UserId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();

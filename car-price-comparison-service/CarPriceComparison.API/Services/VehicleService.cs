@@ -42,7 +42,7 @@ public class VehicleService : IVehicleService
         
         var totalRecords = query.Count();
         var vehicles = query
-            .OrderBy(v => v.VehicleId)
+            .OrderByDescending(v => v.VehicleId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();

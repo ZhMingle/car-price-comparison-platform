@@ -31,7 +31,7 @@ public class DealerService : IDealerService
         
         var totalRecords = query.Count();
         var dealers = query
-            .OrderBy(d => d.DealerId)
+            .OrderByDescending(d => d.DealerId)
             .Skip((pageNumber - 1) * pageSize)
             .Take(pageSize)
             .ToList();
