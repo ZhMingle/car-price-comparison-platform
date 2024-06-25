@@ -57,17 +57,17 @@ export default function ({ isModalOpen, setIsModalOpen, $getData }: any) {
           onKeyDown={handleKeyDown}
           autoComplete="off">
           <Form.Item<FieldType> label="Username" name="username" rules={[{ required: true, message: 'Please input your username!' }]}>
-            <Input />
+            <Input allowClear />
           </Form.Item>
 
           <Form.Item<FieldType> label="Password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
-            <Input.Password />
+            <Input.Password allowClear />
           </Form.Item>
           <Form.Item<FieldType> label="Email" name="email" rules={[{ required: true, message: 'Please input your email!' }]}>
-            <Input />
+            <Input allowClear />
           </Form.Item>
           <Form.Item<FieldType> label="Mobile" name="mobile" rules={[{ required: true, message: 'Please input your mobile!' }]}>
-            <Input />
+            <Input allowClear />
           </Form.Item>
         </Form>
       </Modal>

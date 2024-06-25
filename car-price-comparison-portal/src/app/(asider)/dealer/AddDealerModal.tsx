@@ -20,6 +20,7 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
   }
 
   const handleCancel = () => {
+    formRef.current.resetFields()
     setIsModalOpen(false)
   }
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {

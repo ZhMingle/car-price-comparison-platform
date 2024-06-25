@@ -6,6 +6,8 @@ import { ShowMessage } from '@/utility'
 import qs from 'qs'
 import { delUser, getUser, updateUser } from '@/api'
 import AddUserModal from './AddUserModal'
+import { debounce } from 'lodash'
+import { STATUS } from '@/const'
 
 export interface Item {
   key: string
@@ -177,6 +179,7 @@ const User: React.FC = () => {
       title: 'status',
       dataIndex: 'status',
       key: 'status',
+      render: (t: number) => <span>{STATUS[t]}</span>,
     },
     {
       title: 'operation',
@@ -220,7 +223,7 @@ const User: React.FC = () => {
       ...col,
       onCell: (record: Item) => ({
         record,
-        inputType: col.dataIndex === 'age' ? 'number' : 'text',
+        inputType: 'text',
         dataIndex: col.dataIndex,
         title: col.title,
         editing: isEditing(record),
@@ -258,6 +261,11 @@ const User: React.FC = () => {
       })
     }
   }
+  const enterTriger = debounce(function (e: any) {
+    if (e.key === 'Enter') {
+      search()
+    }
+  }, 200)
   return (
     <>
       <Space className="mb-10">
@@ -266,6 +274,7 @@ const User: React.FC = () => {
           onChange={e => {
             changeField('username', e.target.value)
           }}
+          onKeyDown={enterTriger}
           allowClear
         />
         <Input
@@ -274,8 +283,9 @@ const User: React.FC = () => {
             changeField('mobile', e.target.value)
           }}
           allowClear
+          onKeyDown={enterTriger}
         />
-        <Button type="primary" onClick={search}>
+        <Button type="primary" loading={loading} onClick={search}>
           Search
         </Button>
         <Button onClick={showModal}>Add user</Button>
