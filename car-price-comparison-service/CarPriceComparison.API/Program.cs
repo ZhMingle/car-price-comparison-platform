@@ -60,7 +60,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowSpecificOrigin",
         builder =>
         {
-            builder.WithOrigins("http://your-frontend-domain.com")
+            builder.WithOrigins("https://car-price-comparison-platform-doxd.vercel.app")
                 .AllowAnyMethod()
                 .AllowAnyHeader()
                 .AllowCredentials();
