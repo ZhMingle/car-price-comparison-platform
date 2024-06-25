@@ -20,12 +20,13 @@ export default function Login() {
   const onFinish = debounce(async function (value: any) {
     setLoading(true)
     if (isLogin) {
-      const { data, status } = await login({ ...value })
+      const res = await login({ ...value })
+      console.log('🚀 ~ onFinish ~ data:', res)
       setLoading(false)
-      data?.token && dispatch(setToken(data.token))
-      if (status === 200) {
-        router.push('/vehicle')
-      }
+      res?.token && dispatch(setToken(res.token))
+      // if (status === 200) {
+      //   router.push('/vehicle')
+      // }
     } else {
       const res = await register({ ...pick(value, ['username', 'password', 'email', 'mobile']), status: 0 })
       setLoading(false)

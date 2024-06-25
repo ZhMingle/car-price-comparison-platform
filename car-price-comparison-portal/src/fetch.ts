@@ -12,13 +12,14 @@ interface ResponseData<T> {
 }
 
 async function httpRequest<T>(url: string, method: HttpMethod, options?: RequestOptions): Promise<any> {
+  console.log('🚀 ~ url:', options)
   const { headers, body } = options || {}
 
   const response = await fetch(url, {
     method,
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: localStorage.getItem('token'),
+      Authorization: localStorage.getItem('token') as string,
       ...headers,
     },
     body: body ? JSON.stringify(body) : undefined,
@@ -34,10 +35,12 @@ async function httpRequest<T>(url: string, method: HttpMethod, options?: Request
       status: response.status,
     }
   } else {
-    const res = await {
-      status: response.status,
-    }
-    return res
+    const responseDaata = await response.json()
+    // const res = await {
+    //   status: response.status,
+    //   token: response.json(),
+    // }
+    return responseDaata
   }
 }
 
