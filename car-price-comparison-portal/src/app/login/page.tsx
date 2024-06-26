@@ -21,12 +21,11 @@ export default function Login() {
     setLoading(true)
     if (isLogin) {
       const res = await login({ ...value })
-      console.log('🚀 ~ onFinish ~ data:', res)
       setLoading(false)
-      res?.token && dispatch(setToken(res.token))
-      // if (status === 200) {
-      //   router.push('/vehicle')
-      // }
+      res.data?.token && dispatch(setToken(res.data.token))
+      if (res.status === 200) {
+        router.push('/vehicle')
+      }
     } else {
       const res = await register({ ...pick(value, ['username', 'password', 'email', 'mobile']), status: 0 })
       setLoading(false)
