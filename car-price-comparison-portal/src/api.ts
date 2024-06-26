@@ -1,4 +1,4 @@
-const PATH = '//ec2-54-242-192-58.compute-1.amazonaws.com/'
+const PATH = 'https://ec2-54-242-192-58.compute-1.amazonaws.com/'
 import { get, post, put, del } from './fetch'
 import { Item } from './app/(asider)/user/page'
 import { DealerItem } from './app/(asider)/dealer/page'

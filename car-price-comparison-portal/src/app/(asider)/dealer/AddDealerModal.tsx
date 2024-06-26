@@ -24,8 +24,6 @@ const AddDealerModal = function ({ isModalOpen, setIsModalOpen, $getData }: any)
     setIsModalOpen(false)
   }
   const onFinish: FormProps<FieldType>['onFinish'] = async values => {
-    console.log(values)
-
     const res = await addDealer({
       ...values,
       status: 0, // default status: 0
