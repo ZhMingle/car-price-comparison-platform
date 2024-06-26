@@ -1,4 +1,4 @@
-import { ShowMessage } from '@/utility'
+import { redirect } from 'next/navigation'
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 interface RequestOptions {
@@ -18,26 +18,23 @@ async function httpRequest<T>(url: string, method: HttpMethod, options?: Request
     method,
     headers: {
       'Content-Type': 'application/json',
-      // Authorization: localStorage.getItem('token'),
       ...headers,
+      Authorization: `Bearer ${localStorage.getItem('token') as string}`,
     },
     body: body ? JSON.stringify(body) : undefined,
   })
-  if ([401, 400].includes(response.status)) {
-    const text = await response.text()
-    ShowMessage.error(text)
+  if ([401].includes(response.status)) {
+    location.href = '/login'
   }
-  if (['GET'].includes(method)) {
+
+  if (response.headers.get('content-length') === '0') {
+    return await response
+  } else {
     const responseData = await response.json()
     return {
       data: responseData,
       status: response.status,
     }
-  } else {
-    const res = await {
-      status: response.status,
-    }
-    return res
   }
 }
 

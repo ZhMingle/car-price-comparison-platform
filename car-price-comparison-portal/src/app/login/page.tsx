@@ -20,10 +20,10 @@ export default function Login() {
   const onFinish = debounce(async function (value: any) {
     setLoading(true)
     if (isLogin) {
-      const { data, status } = await login({ ...value })
+      const res = await login({ ...value })
       setLoading(false)
-      data?.token && dispatch(setToken(data.token))
-      if (status === 200) {
+      res.data?.token && dispatch(setToken(res.data.token))
+      if (res.status === 200) {
         router.push('/vehicle')
       }
     } else {
