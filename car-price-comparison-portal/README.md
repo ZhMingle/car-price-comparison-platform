@@ -1,6 +1,6 @@
 ## Guidance
 
-1. cd .\car-price-comparison-portal
+1. make sure the root file is car-price-comparison-portal
 2. npm i : install packages(node version >= 20)
 3. npm run dev: start the project
 
