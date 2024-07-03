@@ -26,7 +26,7 @@
 **Hanganga Kaupapa** 
 ```
 papa-tauritenga-utu-waka
-├─te-whakahaere-utu-waka Pūnaha Whakahaere
+├─waka-utu-whakarite-putanga Pūnaha Whakahaere
 ├─te-ratonga-whakatau-utu-waka Ratonga API
 ├─README.md
 

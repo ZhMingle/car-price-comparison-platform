@@ -26,7 +26,7 @@
 **Project Structure** 
 ```
 car-price-comparison-platform
-├─car-price-comparison-admin		Admin System
+├─car-price-comparison-portal		Admin System
 ├─car-price-comparison-service		API Service
 ├─README.md
 
