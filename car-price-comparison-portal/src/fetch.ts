@@ -1,4 +1,3 @@
-import { redirect } from 'next/navigation'
 type HttpMethod = 'GET' | 'POST' | 'PUT' | 'DELETE'
 
 interface RequestOptions {
