@@ -32,7 +32,8 @@ export default function Bb() {
       ],
     },
     {
-      url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8981_1&content_id=_1265829_1&mode=reset',
+      // url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8981_1&content_id=_1265829_1&mode=reset',
+      url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8809_1&content_id=_1203589_1&mode=reset',
       text: 'Assignments-Info',
       children: [
         {
