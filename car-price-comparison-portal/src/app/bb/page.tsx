@@ -1,36 +1,17 @@
 'use client'
 import styles from '@/style/pp.module.css'
+import { text } from 'stream/consumers'
 
 const CLASS_NAME = [
   'MSE803 Data Analytics',
   'MSE804 Blockchain and decentralised digital identity',
   'MSE805: Cloud Security',
   'MSE806 Intelligent Transportation Systems',
+  'MSE907 Industry-based Capstone Research Project'
 ]
 export default function Bb() {
   const URLS = [
-    {
-      url: 'https://blackboard.up.education/webapps/blackboard/content/listContentEditable.jsp?content_id=_1265142_1&course_id=_8972_1',
-      text: 'PPT',
-      children: [
-        {
-          url: '',
-          text: CLASS_NAME[0],
-        },
-        {
-          url: '',
-          text: CLASS_NAME[1],
-        },
-        {
-          url: '',
-          text: CLASS_NAME[2],
-        },
-        {
-          url: '',
-          text: CLASS_NAME[3],
-        },
-      ],
-    },
+   
     {
       // url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8981_1&content_id=_1265829_1&mode=reset',
       url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8809_1&content_id=_1203589_1&mode=reset',
@@ -52,6 +33,10 @@ export default function Bb() {
           url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8981_1&content_id=_1265862_1',
           text: CLASS_NAME[3],
         },
+        {
+          url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8981_1&content_id=_1265866_1',
+          text: CLASS_NAME[4]
+        }
       ],
     },
     {
@@ -74,10 +59,14 @@ export default function Bb() {
           url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8972_1&content_id=_1265114_1',
           text: CLASS_NAME[3],
         },
+        {
+          url: 'https://blackboard.up.education/webapps/blackboard/content/listContent.jsp?course_id=_8972_1&content_id=_1265128_1',
+          text: CLASS_NAME[4]
+        }
       ],
     },
     {
-      url: 'https://blackboard.up.education/ultra/grades',
+      url: 'https://blackboard.up.education/ultra/courses/_8972_1/cl/outline?legacyUrl=~2Fwebapps~2Fgradebook~2Fdo~2Fstudent~2FviewGrades%3Fcourse_id%3D_8972_1%26callback%3Dcourse',
       text: 'Marks',
     },
   ]
@@ -89,7 +78,7 @@ export default function Bb() {
             <a
               href={i.url}
               target="_blank"
-              className="row-span-4 min-w-300 p-80 border-solid border border-indigo-600 rounded hover:bg-sky-700 hover:text-white">
+              className="row-span-5 min-w-300 p-80 border-solid border border-indigo-600 rounded hover:bg-sky-700 hover:text-white">
               {i.text}
             </a>
             {i.children?.map(j => {
